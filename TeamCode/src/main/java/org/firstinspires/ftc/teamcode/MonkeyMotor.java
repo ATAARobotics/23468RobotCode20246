@@ -66,9 +66,9 @@ public class MonkeyMotor extends Motor {
     public void set_pd(double output, double adjustment, double error) {
 
         //proportion=distance=error
-        double test_auto = (coefficient_p * error) + ((error - last_error) * coefficient_d);
+        double test_auto = (coefficient_p * error) + ((error - prevError) * coefficient_d);
 
-        last_error = error;
+        prevError = error;
 
 
         double denominator = Math.max(Math.abs(output) + Math.abs(adjustment), 1);
