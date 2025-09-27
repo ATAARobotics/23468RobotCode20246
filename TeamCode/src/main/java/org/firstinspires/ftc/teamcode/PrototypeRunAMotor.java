@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 
-@TeleOp(name="Prctice Drive", group="Concept")
+@TeleOp(name="Run A Motor Drive", group="Concept")
 public class PrototypeRunAMotor extends LinearOpMode {
 
     //MOTORS GO HERE!
