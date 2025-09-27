@@ -3,10 +3,6 @@ package org.firstinspires.ftc.teamcode;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 
-import com.arcrobotics.ftclib.controller.PController;
-import com.arcrobotics.ftclib.controller.PDController;
-import com.arcrobotics.ftclib.controller.PIDController;
-import com.arcrobotics.ftclib.controller.PIDFController;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -17,8 +13,6 @@ public class MonkeyMotor extends Motor {
 
     public static int FORWARD = 1;
     public static int REVERSE = -1;
-
-    //public double curOutput = 0;
 
 
     public double targetPosition = 0.0;
@@ -31,8 +25,6 @@ public class MonkeyMotor extends Motor {
     double maxAcceleration = 0.1;
 
     double setSpeed = 0.0;
-
-    double last_error = 0.0;
 
 
     MonkeyMotor(HardwareMap hardwareMap, String Name) {//, int direction, int mode) {
@@ -66,13 +58,15 @@ public class MonkeyMotor extends Motor {
     public void set_pd(double output, double adjustment, double error) {
 
         //proportion=distance=error
-        double test_auto = (coefficient_p * error) + ((error - prevError) * coefficient_d);
-
+        double test_auto = Math.min(
+                (coefficient_p * 0.0075 * error) + (coefficient_d * 0.005 * (error - prevError))
+                , 1);
         prevError = error;
 
+        setSpeed = test_auto * output;
 
-        double denominator = Math.max(Math.abs(output) + Math.abs(adjustment), 1);
-        set_accelerate( (test_auto + adjustment) / denominator );
+        double denominator = Math.max(Math.abs(setSpeed) + Math.abs(adjustment), 1);
+        set_accelerate( (setSpeed + adjustment) / denominator );
 
 
     }
