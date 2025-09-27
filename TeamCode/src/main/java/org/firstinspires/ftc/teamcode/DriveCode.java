@@ -20,8 +20,8 @@ public class DriveCode extends LinearOpMode {
     public MonkeyMotor fr;
     public MonkeyMotor fl;
 
-    public MonkeyMotor pew;
-    public MonkeyMotor pewpew;
+    public LaunchMotor pew;
+    public LaunchMotor pewpew;
 
     // SERVOS GO HERE
 
@@ -51,8 +51,8 @@ public class DriveCode extends LinearOpMode {
         fr = new MonkeyMotor(hardwareMap, "fr");
         fl = new MonkeyMotor(hardwareMap, "fl");
 
-        pew = new MonkeyMotor(hardwareMap, "pew");
-        pewpew = new MonkeyMotor(hardwareMap, "pewpew");
+        pew = new LaunchMotor(hardwareMap, "pew");
+        pewpew = new LaunchMotor(hardwareMap, "pewpew");
 
         Servo gate = hardwareMap.get(Servo.class, "gate");
 
@@ -132,6 +132,9 @@ public class DriveCode extends LinearOpMode {
             telemetry.addData("X:", odo.getPosX());
             telemetry.addData("Y:", odo.getPosY());
             telemetry.addData("Angle", odo.getHeading());
+
+            telemetry. addData("Speed", pew.curSpeed);
+            telemetry. addData("Speed", pewpew.curSpeed);
 
             telemetry.update();
         }
