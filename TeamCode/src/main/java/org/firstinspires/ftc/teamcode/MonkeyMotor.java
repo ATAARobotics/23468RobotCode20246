@@ -32,6 +32,7 @@ public class MonkeyMotor extends Motor {
 
     double setSpeed = 0.0;
 
+    double last_error = 0.0;
 
 
     MonkeyMotor(HardwareMap hardwareMap, String Name) {//, int direction, int mode) {
@@ -64,9 +65,14 @@ public class MonkeyMotor extends Motor {
 
     public void set_pd(double output, double adjustment, double error) {
 
+        //proportion=distance=error
+        double test_auto = (coefficient_p * error) + ((error - last_error) * coefficient_d);
+
+        last_error = error;
+
 
         double denominator = Math.max(Math.abs(output) + Math.abs(adjustment), 1);
-        set_accelerate( (output + adjustment) / denominator );
+        set_accelerate( (test_auto + adjustment) / denominator );
 
 
     }

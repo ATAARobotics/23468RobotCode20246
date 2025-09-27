@@ -25,6 +25,8 @@ public class DriveCode extends LinearOpMode {
 
     // SERVOS GO HERE
 
+    public Servo gate;
+
     //BUTTONS & CONTROLS GO HERE
     public float LeftStickUPDOWN;
     public float RightStickUPDOWN;
@@ -51,6 +53,8 @@ public class DriveCode extends LinearOpMode {
 
         pew = new MonkeyMotor(hardwareMap, "pew");
         pewpew = new MonkeyMotor(hardwareMap, "pewpew");
+
+        Servo gate = hardwareMap.get(Servo.class, "gate");
 
         odo = hardwareMap.get(GoBildaPinpointDriver.class,"odo");
         odo.setOffsets(24.0, 84.0, DistanceUnit.MM);
@@ -80,6 +84,15 @@ public class DriveCode extends LinearOpMode {
             odo.update();
             /////////////////// GOTTA GOOOOOOO! ///////////////////
             //from Last year's code
+
+            if(gamepad1.x){
+                gate.setPosition(-1);
+            }
+            else if (!gamepad1.x ) {
+                gate.setPosition(1);
+            }
+
+
             //TODO name = opposite of input
             RightStickUPDOWN = -gamepad1.left_stick_y;
             RightStickRIGHTLEFT = -gamepad1.left_stick_x;
@@ -114,7 +127,7 @@ public class DriveCode extends LinearOpMode {
             telemetry.addLine("In Run Loop");
 
             pew.set(0.75);
-             pewpew.set(0.75);
+            pewpew.set(0.75);
 
             telemetry.addData("X:", odo.getPosX());
             telemetry.addData("Y:", odo.getPosY());

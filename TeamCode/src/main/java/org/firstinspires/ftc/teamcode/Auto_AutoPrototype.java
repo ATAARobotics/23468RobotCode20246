@@ -78,7 +78,10 @@ public class Auto_AutoPrototype extends LinearOpMode {
 
         }
 
+
         waitForStart();
+
+        odo.resetPosAndIMU();
         QueLinkList.get(currentState).setCurrentLocationAndRotation(odo.getPosX(), odo.getPosY(), odo.getHeading());
         initializeState();
 
