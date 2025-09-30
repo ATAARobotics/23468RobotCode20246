@@ -4,11 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
-import org.firstinspires.ftc.robotcore.external.navigation.UnnormalizedAngleUnit;
 
 
 @TeleOp(name="Player Controlled Drive Code", group="Concept")
@@ -126,8 +122,8 @@ public class DriveCode extends LinearOpMode {
 
             telemetry.addLine("In Run Loop");
 
-            pew.set(0.75);
-            pewpew.set(0.75);
+            pew.pd_speed(0.75, telemetry);
+            pewpew.pd_speed(0.75, telemetry);
 
             telemetry.addData("X:", odo.getPosX());
             telemetry.addData("Y:", odo.getPosY());

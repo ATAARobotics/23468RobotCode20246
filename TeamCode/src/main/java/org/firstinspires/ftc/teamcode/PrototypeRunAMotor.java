@@ -8,8 +8,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 public class PrototypeRunAMotor extends LinearOpMode {
 
     //MOTORS GO HERE!
-    public MonkeyMotor t1;
-    public MonkeyMotor t2;
+    public LaunchMotor t1;
+    public LaunchMotor t2;
 
     // SERVOS GO HERE
 
@@ -36,8 +36,8 @@ public class PrototypeRunAMotor extends LinearOpMode {
     @Override
     public void runOpMode() {
         //ROBOT SETUP CODE GOES HERE
-        t1 = new MonkeyMotor(hardwareMap, "t1");
-        t2 = new MonkeyMotor(hardwareMap, "t2");
+        t1 = new LaunchMotor(hardwareMap, "t1");
+        t2 = new LaunchMotor(hardwareMap, "t2");
 
 
         while (opModeInInit()) {
@@ -56,11 +56,12 @@ public class PrototypeRunAMotor extends LinearOpMode {
             LeftStickUPDOWN = -gamepad1.left_stick_y;
             RightStickUPDOWN = -gamepad1.right_stick_y;
             //rotate motor
-            t1.set(LeftStickUPDOWN);
-            t2.set(RightStickUPDOWN);
+            t1.pd_speed(LeftStickUPDOWN, telemetry);
+            t2.pd_speed(RightStickUPDOWN, telemetry);
 
-            telemetry.addData("motor speed 1", LeftStickUPDOWN);
-            telemetry.addData("motor speed 2", RightStickUPDOWN);
+            telemetry.addData("motor speed 1", t1.curSpeed);
+            telemetry.addData("motor speed 2", t2.curSpeed);
+
 
             telemetry.update();
         }

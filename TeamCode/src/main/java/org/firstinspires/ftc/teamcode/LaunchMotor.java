@@ -6,6 +6,8 @@ import static java.lang.Math.min;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 public class LaunchMotor extends Motor {
 
     public static int POWER = 0;
@@ -19,8 +21,9 @@ public class LaunchMotor extends Motor {
 
     public double targetPosition = 0.0;
     public double prevError = 0.0;
-    public double coefficient_p = 1;
-    public double coefficient_d = 1;
+    public double coefficient_p = 0.00015;
+    public double coefficient_d = 0.0;
+    public double coefficient_i = 0.0001;
 
     double curSpeed = 0.0;
     double prevSetSpeed = 0.0;
@@ -33,6 +36,7 @@ public class LaunchMotor extends Motor {
     double LastPosition = 0.0;
 
     double LastSpeed = 0.0;
+    double ErrorSum = 0.0;
 
     LaunchMotor(HardwareMap hardwareMap, String Name) {//, int direction, int mode) {
         super(hardwareMap, Name);
@@ -49,15 +53,17 @@ public class LaunchMotor extends Motor {
         super.set(output);
     }
 
-    public void pd_speed(double TargetSpeed){
+    public void pd_speed(double TargetSpeed, Telemetry telemetry){
 
         double CurrentPosition = super.getCurrentPosition();
         double CurrentSpeed = (CurrentPosition - LastPosition);
         double error = (TargetSpeed - CurrentSpeed);
-        double power = (coefficient_p * error) + ((curSpeed - LastSpeed) * coefficient_d);
+        ErrorSum += error;
+        double power = (coefficient_p * error) + ((curSpeed - LastSpeed) * coefficient_d) + ErrorSum * coefficient_i;
         LastPosition = CurrentPosition;
         LastSpeed = CurrentSpeed;
 
+        telemetry.addData("Error", error);
         set(power);
 
 
