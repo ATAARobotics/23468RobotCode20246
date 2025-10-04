@@ -20,6 +20,9 @@ public class MonkeyMotor extends Motor {
     public double coefficient_p = 1;
     public double coefficient_d = 1;
 
+    public double coefficient_p_rot = 1;
+    public double coefficient_d_rot = 1;
+
     double curSpeed = 0.0;
     double prevSetSpeed = 0.0;
     double maxAcceleration = 0.1;
@@ -67,6 +70,22 @@ public class MonkeyMotor extends Motor {
 
         double denominator = Math.max(Math.abs(setSpeed) + Math.abs(adjustment), 1);
         set_accelerate( (setSpeed + adjustment) / denominator );
+
+
+    }
+
+    public void set_pd_rotate(double output, double error) {
+
+        //proportion=distance=error
+        double test_auto = Math.min(
+                (coefficient_p_rot * 2 * error) + (coefficient_d_rot * 1 * (error - prevError))
+                , 1);
+        prevError = error;
+
+        setSpeed = test_auto * output;
+
+        double denominator = Math.max(Math.abs(setSpeed), 1);
+        set_accelerate( (setSpeed) / denominator );
 
 
     }

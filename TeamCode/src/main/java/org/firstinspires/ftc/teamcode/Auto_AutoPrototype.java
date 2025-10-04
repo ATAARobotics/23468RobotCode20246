@@ -4,6 +4,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
@@ -20,6 +21,8 @@ public class Auto_AutoPrototype extends LinearOpMode {
     public MonkeyMotor fr;
     public MonkeyMotor fl;
 
+    Servo sa;
+
     GoBildaPinpointDriver odo;
 
     public int currentState = 0;
@@ -31,8 +34,14 @@ public class Auto_AutoPrototype extends LinearOpMode {
         Auto_DriveToTarget a = new Auto_DriveToTarget( targetx, targety, power, this.br, this.bl, this.fr, this.fl );
         this.QueLinkList.add(a);
     }
+
     public void add_FaceAHeadingAction(double targeth, double power) {
         Auto_FaceAHeading a = new Auto_FaceAHeading( targeth, power, this.br, this.bl, this.fr, this.fl );
+        this.QueLinkList.add(a);
+    }
+
+    public void add_SetServoAction(Servo servo, double target) {
+        Auto_SetServo a = new Auto_SetServo( servo, target );
         this.QueLinkList.add(a);
     }
 
@@ -53,6 +62,8 @@ public class Auto_AutoPrototype extends LinearOpMode {
         fr = new MonkeyMotor(hardwareMap, "fr");
         fl = new MonkeyMotor(hardwareMap, "fl");
 
+        sa = hardwareMap.get(Servo.class, "sa");
+
         odo = hardwareMap.get(GoBildaPinpointDriver.class,"odo");
         odo.setOffsets(24.0, 84.0, DistanceUnit.MM);
         odo.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
@@ -61,8 +72,18 @@ public class Auto_AutoPrototype extends LinearOpMode {
 
         //Initialize our states for auto:
 
-        //addDriveToTargetAction(1000, 700, 0.5);
-        add_FaceAHeadingAction(Math.PI, 0.5);
+        //addDriveToTargetAction(9000, 600, 0.3);
+        //add_FaceAHeadingAction(-3, 0.5);
+        add_SetServoAction(sa, 1);
+
+
+
+
+
+
+
+
+        //
 
         while (opModeInInit()) {
             //  odo.resetPosAndIMU();
@@ -86,7 +107,7 @@ public class Auto_AutoPrototype extends LinearOpMode {
 
         waitForStart();
 
-        odo.resetPosAndIMU();
+        //odo.resetPosAndIMU();
         QueLinkList.get(currentState).setCurrentLocationAndRotation(odo.getPosX(), odo.getPosY(), odo.getHeading());
         initializeState();
 
@@ -103,7 +124,7 @@ public class Auto_AutoPrototype extends LinearOpMode {
 
                     currentState++;
                     if (currentState < QueLinkList.size() ) {
-                        QueLinkList.get(currentState).setCurrentLocationAndRotation(x, y, h);
+                        QueLinkList.get(currentState).setCurrentLocationAndRotation(x, y, h); // must happen before init
                         initializeState();
                     }
                 } else {

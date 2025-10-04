@@ -24,7 +24,7 @@ public class Auto_DriveToTarget extends State {
     public double curh;
 
     public double tolerance = 10;
-    double coefficient = 1;
+    double coefficient = 1.1;
     double rotScale = 1;
     double speed = 0.5;
 
