@@ -31,6 +31,10 @@ public class Auto_AutoPrototype extends LinearOpMode {
         Auto_DriveToTarget a = new Auto_DriveToTarget( targetx, targety, power, this.br, this.bl, this.fr, this.fl );
         this.QueLinkList.add(a);
     }
+    public void add_FaceAHeadingAction(double targeth, double power) {
+        Auto_FaceAHeading a = new Auto_FaceAHeading( targeth, power, this.br, this.bl, this.fr, this.fl );
+        this.QueLinkList.add(a);
+    }
 
     public void initializeState() {
         //code runs between every state
@@ -57,7 +61,8 @@ public class Auto_AutoPrototype extends LinearOpMode {
 
         //Initialize our states for auto:
 
-        addDriveToTargetAction(1000, 700, 0.5);
+        //addDriveToTargetAction(1000, 700, 0.5);
+        add_FaceAHeadingAction(Math.PI, 0.5);
 
         while (opModeInInit()) {
             //  odo.resetPosAndIMU();
