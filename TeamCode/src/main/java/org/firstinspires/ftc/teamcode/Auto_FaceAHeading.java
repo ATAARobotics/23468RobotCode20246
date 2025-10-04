@@ -49,10 +49,12 @@ public class Auto_FaceAHeading extends State {
 
     @Override
     public boolean truefalse(){
-        double diff = ((curh - targeth + Math.PI) % (2 * Math.PI)) - Math.PI;
+        //double diff = ((curh - targeth + Math.PI) % (2 * Math.PI)) - Math.PI;
         // This keeps diff in range [-180, 180]
 
-        if (Math.abs(diff) < tolerance) {
+
+
+        if (Math.abs((curh - targeth) % 2 * Math.PI) < tolerance) {
             bl.set(0);
             br.set(0);
             fl.set(0);
@@ -67,11 +69,12 @@ public class Auto_FaceAHeading extends State {
         double diff = ((curh - targeth + Math.PI) % (2 * Math.PI)) - Math.PI;
 
         double adjustment = speed*(diff);
+        adjustment = 0.33 ;
 
-        fr.set_pd(-adjustment * rotScale,0, diff);
-        fl.set_pd(adjustment * rotScale,0, diff);
-        br.set_pd(-adjustment * rotScale,0, diff);
-        bl.set_pd(-adjustment * rotScale,0, diff);
+        fr.set(-adjustment);
+        fl.set(adjustment);
+        br.set(-adjustment);
+        bl.set(-adjustment);
 
     }
 
