@@ -94,7 +94,7 @@ public class Auto_AutoPrototype extends LinearOpMode {
             //Runs after pressing 'Play'
             odo.update();
             double x = odo.getPosX();
-            double y = odo.getPosY();
+            double y = odo.getPosY(); 
             double h = odo.getHeading();
 
             if (currentState < QueLinkList.size()) {
