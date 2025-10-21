@@ -34,7 +34,10 @@ public class Auto_AutoPrototype extends LinearOpMode {
         Auto_DriveToTarget a = new Auto_DriveToTarget( targetx, targety, power, this.br, this.bl, this.fr, this.fl );
         this.QueLinkList.add(a);
     }
-
+    public void addwaitaction(double wait_TimeInMs) {
+        Auto_WaitState a = new Auto_WaitState( wait_TimeInMs );
+        this.QueLinkList.add(a);
+    }
     public void add_FaceAHeadingAction(double targeth, double power) {
         Auto_FaceAHeading a = new Auto_FaceAHeading( targeth, power, this.br, this.bl, this.fr, this.fl );
         this.QueLinkList.add(a);
@@ -62,22 +65,38 @@ public class Auto_AutoPrototype extends LinearOpMode {
         fr = new MonkeyMotor(hardwareMap, "fr");
         fl = new MonkeyMotor(hardwareMap, "fl");
 
-        sa = hardwareMap.get(Servo.class, "sa");
+        sa = hardwareMap.get(Servo.class, "gate");
 
         odo = hardwareMap.get(GoBildaPinpointDriver.class,"odo");
-        odo.setOffsets(24.0, 84.0, DistanceUnit.MM);
+        odo.setOffsets(-181.8, 24.4, DistanceUnit.MM);
         odo.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
-        odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.FORWARD);
+        odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.REVERSED);
         odo.resetPosAndIMU();
 
         //Initialize our states for auto:
 
         //addDriveToTargetAction(9000, 600, 0.3);
         //add_FaceAHeadingAction(-3, 0.5);
-        add_SetServoAction(sa, 1);
+        //add_SetServoAction(sa, 1);
 
 
 
+//auto config
+        addDriveToTargetAction(500, 0, 0.4);
+        add_FaceAHeadingAction(Math.PI/2, 0.4);
+        addDriveToTargetAction(900, 0, 0.4);
+        //addwaitaction(6700);
+        //addDriveToTargetAction(2400, 0, 0.6);
+        //addDriveToTargetAction(167,0, 0.6);
+
+
+        //addDriveToTargetAction(1288, 0, 0.6);
+        //addDriveToTargetAction(1288, 728, 0.6);
+        //addDriveToTargetAction(862, 0, 0.6);
+        //addDriveToTargetAction(1916, 0, 0.6);
+        //addDriveToTargetAction(1916, 610, 0.6);
+        //addDriveToTargetAction(862, 0, 0.6);
+        //addDriveToTargetAction(1664, 631, 0.6);
 
 
 
@@ -86,8 +105,10 @@ public class Auto_AutoPrototype extends LinearOpMode {
         //
 
         while (opModeInInit()) {
-            //  odo.resetPosAndIMU();
+            odo.update();
             //Runs after pressing "INIT' and before pressing 'play'
+
+            sa.setPosition(1);
 
             fr.resetEncoder();
             fl.resetEncoder();
@@ -98,6 +119,10 @@ public class Auto_AutoPrototype extends LinearOpMode {
             telemetry.addData("fl", fl.getCurrentPosition());
             telemetry.addData("br", br.getCurrentPosition());
             telemetry.addData("bl", bl.getCurrentPosition());
+
+            telemetry.addData("X:", odo.getPosX());
+            telemetry.addData("Y:", odo.getPosY());
+            telemetry.addData("H:", odo.getHeading());
 
             telemetry.update();
 

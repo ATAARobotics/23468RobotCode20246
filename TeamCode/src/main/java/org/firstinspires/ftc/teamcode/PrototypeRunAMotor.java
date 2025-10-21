@@ -26,11 +26,15 @@ public class PrototypeRunAMotor extends LinearOpMode {
     public float LeftStickUPDOWN;
     public float RightStickUPDOWN;
 
+    public boolean up = false;
+    public boolean down = false;
+
 
     //OTHER FLAGS GO HERE
 
 
     //CONSTRUCTS GO HERE
+    public double targetSpeed = 0.0;
 
 
     @Override
@@ -51,16 +55,26 @@ public class PrototypeRunAMotor extends LinearOpMode {
         waitForStart();
         while (opModeIsActive()) {
 
-            /////////////////// GOTTA GOOOOOOO! ///////////////////
-            //from Last year's code
-            LeftStickUPDOWN = -gamepad1.left_stick_y;
-            RightStickUPDOWN = -gamepad1.right_stick_y;
-            //rotate motor
-            t1.set(LeftStickUPDOWN);
-            t2.set(RightStickUPDOWN);
+            if (gamepad1.dpad_up && !up) {
+                up = true;
+                targetSpeed += 0.01;
+            } else if (!gamepad1.dpad_up) {
+                up = false;
+            }
 
-            telemetry.addData("motor speed 1", LeftStickUPDOWN);
-            telemetry.addData("motor speed 2", RightStickUPDOWN);
+            if (gamepad1.dpad_down && !down) {
+                down = true;
+                targetSpeed -= 0.01;
+            } else if (!gamepad1.dpad_down) {
+                down = false;
+            }
+
+            t1.set(targetSpeed);
+            t2.set(targetSpeed);//the motors go in same directions
+
+            telemetry.addData("target Speed", targetSpeed);
+            telemetry.addData("motor speed 1", t1.encoder.getRawVelocity());
+            telemetry.addData("motor speed 2", t2.encoder.getRawVelocity());
 
             telemetry.update();
         }

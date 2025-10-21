@@ -69,8 +69,8 @@ public class Auto_FaceAHeading extends State {
 
         fr.set_pd_rotate(-adjustment, diff);
         fl.set_pd_rotate(adjustment, diff);
-        br.set_pd_rotate(-adjustment, diff);
-        bl.set_pd_rotate(-adjustment, diff);
+        br.set_pd_rotate(adjustment, diff);
+        bl.set_pd_rotate(adjustment, diff);
 
     }
 

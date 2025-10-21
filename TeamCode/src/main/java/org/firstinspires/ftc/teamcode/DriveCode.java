@@ -57,9 +57,9 @@ public class DriveCode extends LinearOpMode {
         Servo gate = hardwareMap.get(Servo.class, "gate");
 
         odo = hardwareMap.get(GoBildaPinpointDriver.class,"odo");
-        odo.setOffsets(24.0, 84.0, DistanceUnit.MM);
+        odo.setOffsets(-181.8, 24.4, DistanceUnit.MM);
         odo.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
-        odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.FORWARD);
+        odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.REVERSED);
         odo.resetPosAndIMU();
 
 
@@ -94,10 +94,10 @@ public class DriveCode extends LinearOpMode {
 
 
             //TODO name = opposite of input
-            RightStickUPDOWN = -gamepad1.left_stick_y;
-            RightStickRIGHTLEFT = -gamepad1.left_stick_x;
-            LeftStickUPDOWN = -gamepad1.right_stick_y;
-            LeftStickRIGHTLEFT = gamepad1.right_stick_x;
+            LeftStickUPDOWN = gamepad1.left_stick_y;
+            LeftStickRIGHTLEFT = gamepad1.left_stick_x;
+            RightStickUPDOWN = -gamepad1.right_stick_y;
+            RightStickRIGHTLEFT= gamepad1.right_stick_x;
 
             double rx = RightStickRIGHTLEFT;
             double ry = RightStickUPDOWN;
@@ -119,10 +119,10 @@ public class DriveCode extends LinearOpMode {
 
             double denominator = Math.max(Math.abs(ry) + Math.abs(rx) + Math.abs(lx), 1);
 
-            fr.set((ry + rx - lx * rxSped) / denominator * sped);
-            fl.set((ry - rx + lx * rxSped) / denominator * sped);
-            br.set((ry - rx - lx * rxSped) / denominator * sped);
-            bl.set((-ry - rx - lx * rxSped) / denominator * sped);
+            fr.set((ry - rx - lx * rxSped) / denominator * sped);
+            fl.set((ry + rx + lx * rxSped) / denominator * sped);
+            br.set((-ry - rx + lx * rxSped) / denominator * sped);
+            bl.set((ry - rx + lx * rxSped) / denominator * sped);
 
             telemetry.addLine("In Run Loop");
 

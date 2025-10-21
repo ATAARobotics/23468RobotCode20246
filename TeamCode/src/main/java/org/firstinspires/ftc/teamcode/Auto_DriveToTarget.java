@@ -74,6 +74,7 @@ public class Auto_DriveToTarget extends State {
 
     @Override
     public void action(){
+
         dx = targetx - curx;
         dy = targety - cury;
 
@@ -85,10 +86,10 @@ public class Auto_DriveToTarget extends State {
         double adjustment = coefficient*(curh - keepH);
         double denominator = Math.max(Math.abs(ry) + Math.abs(rx), 1);
 
-        fr.set_pd((ry + rx ) / denominator * speed,-adjustment * rotScale, totaldist);
-        fl.set_pd((ry - rx ) / denominator * speed, adjustment * rotScale, totaldist);
-        br.set_pd((ry - rx ) / denominator * speed, -adjustment * rotScale, totaldist);
-        bl.set_pd((-ry - rx ) / denominator * speed,-adjustment * rotScale, totaldist);
+        fr.set_pd((ry - rx ) / denominator * speed,-adjustment * rotScale, totaldist);
+        fl.set_pd((ry + rx ) / denominator * speed, adjustment * rotScale, totaldist);
+        br.set_pd((-ry - rx ) / denominator * speed, adjustment * rotScale, totaldist);
+        bl.set_pd((ry - rx ) / denominator * speed,adjustment * rotScale, totaldist);
 
     }
 
