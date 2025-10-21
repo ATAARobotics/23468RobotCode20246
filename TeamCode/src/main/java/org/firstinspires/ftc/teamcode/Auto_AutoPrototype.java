@@ -82,9 +82,9 @@ public class Auto_AutoPrototype extends LinearOpMode {
 
 
 //auto config
-        addDriveToTargetAction(500, 0, 0.4);
+        addDriveToTargetAction(500, 600, 0.4);
         add_FaceAHeadingAction(Math.PI/2, 0.4);
-        addDriveToTargetAction(900, 0, 0.4);
+        addDriveToTargetAction(100, 100, 0.4);
         //addwaitaction(6700);
         //addDriveToTargetAction(2400, 0, 0.6);
         //addDriveToTargetAction(167,0, 0.6);

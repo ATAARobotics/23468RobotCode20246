@@ -17,8 +17,8 @@ public class MonkeyMotor extends Motor {
 
     public double targetPosition = 0.0;
     public double prevError = 0.0;
-    public double coefficient_p = 1;
-    public double coefficient_d = 1.1;
+    public double coefficient_p = 1.1;
+    public double coefficient_d = 1;
 
     public double coefficient_p_rot = 1;
     public double coefficient_d_rot = 1;
@@ -76,12 +76,12 @@ public class MonkeyMotor extends Motor {
 
     public void set_pd_rotate(double output, double error) {
 
-        set_accelerate(-output);
-        return;
-        /*
+        //set_accelerate(-output);
+        //return;
+
         //proportion=distance=error
         double test_auto = Math.min(
-                (coefficient_p_rot * 2 * error) + (coefficient_d_rot * 1 * (error - prevError))
+                (coefficient_p_rot * 0.95 * error) + (coefficient_d_rot * 1.1 * (error - prevError))
                 , 1);
         prevError = error;
 
@@ -89,7 +89,7 @@ public class MonkeyMotor extends Motor {
 
         double denominator = Math.max(Math.abs(setSpeed), 1);
         set_accelerate( (setSpeed) / denominator );
-`*/
+
 
     }
 

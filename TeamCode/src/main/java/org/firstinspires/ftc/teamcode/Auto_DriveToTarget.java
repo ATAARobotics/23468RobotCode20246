@@ -21,7 +21,7 @@ public class Auto_DriveToTarget extends State {
     public double cury;
     public double curh;
 
-    public double tolerance = 10;
+    public double tolerance = 20;
     double coefficient = 1.1;
     double rotScale = 1;
     double speed = 0.5;
@@ -72,10 +72,10 @@ public class Auto_DriveToTarget extends State {
         dx = targetx - curx;
         dy = targety - cury;
 
-        totaldist = sqrt( pow(dx, 2) + pow(dy, 2) );
+        totaldist = abs(dx) + abs(dy); //sqrt( pow(dx, 2) + pow(dy, 2) );
 
-        ry = Math.cos(curh)*totaldist;
-        rx = Math.sin(curh)*totaldist;;
+        ry = (Math.cos(curh)*dx + Math.sin(curh)*dy) / (totaldist);
+        rx = (Math.sin(curh)*dx + -1*Math.cos(curh)*dy) / (totaldist);
 
 
         double adjustment = coefficient*(curh - targetH);
