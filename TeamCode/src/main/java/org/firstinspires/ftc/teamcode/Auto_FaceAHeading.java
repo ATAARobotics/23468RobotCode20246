@@ -38,7 +38,7 @@ public class Auto_FaceAHeading extends State {
     }
 
     @Override
-    public void initializeState() {
+    public void initializeState(double targetH) {
         this.starth = this.curh;
     }
 
@@ -77,5 +77,10 @@ public class Auto_FaceAHeading extends State {
     @Override
     public String readStateData() {
         return String.format(new Locale("en-us"),"CH: %f.1 | TH: %f.1 | diff: %f.1", curh, targeth, diff);
+    }
+
+    @Override
+    public double stop() {
+        return targeth;
     }
 }

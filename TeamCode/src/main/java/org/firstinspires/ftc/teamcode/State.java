@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 
 public class State {
 
+    public double targetH;
 
     public State() {
     }
@@ -18,12 +19,12 @@ public class State {
     public void setCurrentLocationAndRotation (double x_mm, double y_mm, double heading_rad){
     }
 
-    public void initializeState() {
-
+    public void initializeState(double targetH) {
+        this.targetH = targetH;
     }
 
-    public void stop() {
-
+    public double stop() {
+        return targetH;
     }
 
     public String readStateData() {

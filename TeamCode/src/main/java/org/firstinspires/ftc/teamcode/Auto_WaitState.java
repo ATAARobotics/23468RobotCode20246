@@ -23,8 +23,9 @@ public class Auto_WaitState extends State{
 
     }
 
-    public void initializeState() {
+    public void initializeState(double targetH) {
         movingTimeInMillis = System.currentTimeMillis();
+        super.initializeState(targetH);
     }
 
 

@@ -17,8 +17,6 @@ public class Auto_DriveToTarget extends State {
     public double targetx;
     public double targety;
 
-    public double keepH;
-
     public double curx;
     public double cury;
     public double curh;
@@ -47,10 +45,6 @@ public class Auto_DriveToTarget extends State {
         this.targety = targety;
     }
 
-    @Override
-    public void initializeState() {
-        this.keepH = this.curh;
-    }
 
     @Override
     public void setCurrentLocationAndRotation (double x_mm, double y_mm, double heading_rad){
@@ -80,10 +74,11 @@ public class Auto_DriveToTarget extends State {
 
         totaldist = sqrt( pow(dx, 2) + pow(dy, 2) );
 
-        ry = dx/totaldist;
-        rx = dy/totaldist;
+        ry = Math.cos(curh)*totaldist;
+        rx = Math.sin(curh)*totaldist;;
 
-        double adjustment = coefficient*(curh - keepH);
+
+        double adjustment = coefficient*(curh - targetH);
         double denominator = Math.max(Math.abs(ry) + Math.abs(rx), 1);
 
         fr.set_pd((ry - rx ) / denominator * speed,-adjustment * rotScale, totaldist);

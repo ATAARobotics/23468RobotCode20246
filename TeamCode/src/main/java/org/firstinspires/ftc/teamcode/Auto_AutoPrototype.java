@@ -28,7 +28,7 @@ public class Auto_AutoPrototype extends LinearOpMode {
     public int currentState = 0;
     public LinkedList<State> QueLinkList = new LinkedList<State>();
 
-    public double keepH;
+    public double keepH = 0;
 
     public void addDriveToTargetAction(double targetx, double targety, double power) {
         Auto_DriveToTarget a = new Auto_DriveToTarget( targetx, targety, power, this.br, this.bl, this.fr, this.fl );
@@ -48,9 +48,9 @@ public class Auto_AutoPrototype extends LinearOpMode {
         this.QueLinkList.add(a);
     }
 
-    public void initializeState() {
+    public void initializeState(double targetH) {
         //code runs between every state
-        QueLinkList.get(currentState).initializeState();
+        QueLinkList.get(currentState).initializeState(targetH);
     }
 
     @Override
@@ -134,7 +134,7 @@ public class Auto_AutoPrototype extends LinearOpMode {
 
         //odo.resetPosAndIMU();
         QueLinkList.get(currentState).setCurrentLocationAndRotation(odo.getPosX(), odo.getPosY(), odo.getHeading());
-        initializeState();
+        initializeState(keepH);
 
         while (opModeIsActive()) {
             //Runs after pressing 'Play'
@@ -145,12 +145,12 @@ public class Auto_AutoPrototype extends LinearOpMode {
 
             if (currentState < QueLinkList.size()) {
                 if(  QueLinkList.get(currentState).truefalse() ){
-                    QueLinkList.get(currentState).stop();
+                    keepH = QueLinkList.get(currentState).stop();
 
                     currentState++;
                     if (currentState < QueLinkList.size() ) {
                         QueLinkList.get(currentState).setCurrentLocationAndRotation(x, y, h); // must happen before init
-                        initializeState();
+                        initializeState(keepH);
                     }
                 } else {
                     QueLinkList.get(currentState).setCurrentLocationAndRotation(x, y, h);
