@@ -10,10 +10,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 import java.util.LinkedList;
 
-@Autonomous(name = "Auto Prototype", group = "Concept")
+@Autonomous(name = "Auto Sniper Prototype", group = "Concept")
 
 //Welcome to 2025's basic Auto!
-public class Auto_AutoPrototype extends LinearOpMode {
+public class Auto_AutoPrototype_Sniper extends LinearOpMode {
     //Declare all your variables here. Keep similar variables together with a note as to what they are
     //These are our 4 motors
     public MonkeyMotor br;
@@ -82,27 +82,25 @@ public class Auto_AutoPrototype extends LinearOpMode {
 
 
 //auto config
-        addDriveToTargetAction(1200, 380, 0.4);
-        add_FaceAHeadingAction(25*Math.PI/36, 0.4);
+        addDriveToTargetAction(200, 0, 0.4);
+        add_FaceAHeadingAction(-Math.PI/8, 0.7);
         addwaitaction(3000);
-        add_FaceAHeadingAction(Math.PI/2, 0.6);
-        addDriveToTargetAction(1300, 950, 0.4);
-        addDriveToTargetAction(1200, 380, 0.4);
-        add_FaceAHeadingAction(3*Math.PI/4, 0.6);
+        add_FaceAHeadingAction(-19*Math.PI/36, 0.4);
+        addDriveToTargetAction(125, 100, 0.4);
+        addDriveToTargetAction(100, -1010, 0.4);
+        addwaitaction(2000);
+        addDriveToTargetAction(300, 0, 0.4);
+        add_FaceAHeadingAction(-Math.PI/7, 0.7);
         addwaitaction(3000);
-        add_FaceAHeadingAction(Math.PI/2, 0.6);
-        addDriveToTargetAction(1900, 380, 0.4);
-        addDriveToTargetAction(1900, 950, 0.4);
-        addDriveToTargetAction(1900,380,0.4);
-        addDriveToTargetAction(1200, 380, 0.4);
-        add_FaceAHeadingAction(7*Math.PI/9, 0.6);
+        addDriveToTargetAction(700, -350, 0.4);
+        add_FaceAHeadingAction(-Math.PI/2, 0.4);
+        addDriveToTargetAction(700, -750, 0.4);
+        addDriveToTargetAction(250, 0, 0.4);
+        add_FaceAHeadingAction(-Math.PI/7, 0.7);
         addwaitaction(3000);
-        addDriveToTargetAction(1600, 380, 0.4);
-        add_FaceAHeadingAction(Math.PI/2, 0.6);
-        addDriveToTargetAction(1600, 1000, 0.4);
-
-
-
+        add_FaceAHeadingAction(-Math.PI/2, 0.7);
+        addDriveToTargetAction(1630, -400, 0.4);
+        addDriveToTargetAction(1630, -850, 0.4);
 
 
 

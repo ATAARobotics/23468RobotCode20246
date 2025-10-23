@@ -72,7 +72,7 @@ public class Auto_DriveToTarget extends State {
         dx = targetx - curx;
         dy = targety - cury;
 
-        totaldist = abs(dx) + abs(dy); //sqrt( pow(dx, 2) + pow(dy, 2) );
+        totaldist = sqrt( pow(dx, 2) + pow(dy, 2) );
 
         ry = (Math.cos(curh)*dx + Math.sin(curh)*dy) / (totaldist);
         rx = (Math.sin(curh)*dx + -1*Math.cos(curh)*dy) / (totaldist);

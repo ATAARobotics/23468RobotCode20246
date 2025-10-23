@@ -50,8 +50,8 @@ public class Auto_FaceAHeading extends State {
 
 
 
-        if (Math.abs(((curh - targeth + Math.PI) % (2 * Math.PI)) - Math.PI) < tolerance
-                && (this.curh - this.starth) > 0.1 ) {
+        if (Math.abs(((curh - targeth + Math.PI) % (2 * Math.PI)) - Math.PI) < tolerance){
+                //&& (this.curh - this.starth) > 0.001 ) {
             bl.set(0);
             br.set(0);
             fl.set(0);
