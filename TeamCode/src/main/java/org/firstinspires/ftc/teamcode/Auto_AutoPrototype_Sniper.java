@@ -10,7 +10,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 import java.util.LinkedList;
 
-@Autonomous(name = "Auto Sniper Prototype", group = "Concept")
+@Autonomous(name = "Auto Sniper Prototype1.5", group = "Concept")
 
 //Welcome to 2025's basic Auto!
 public class Auto_AutoPrototype_Sniper extends LinearOpMode {
@@ -93,7 +93,7 @@ public class Auto_AutoPrototype_Sniper extends LinearOpMode {
         add_FaceAHeadingAction(-Math.PI/7, 0.7);
         addwaitaction(3000);
         addDriveToTargetAction(700, -350, 0.4);
-        add_FaceAHeadingAction(-Math.PI/2, 0.4);
+        add_FaceAHeadingAction(-Math.PI/2, 0.6);
         addDriveToTargetAction(700, -750, 0.4);
         addDriveToTargetAction(250, 0, 0.4);
         add_FaceAHeadingAction(-Math.PI/7, 0.7);

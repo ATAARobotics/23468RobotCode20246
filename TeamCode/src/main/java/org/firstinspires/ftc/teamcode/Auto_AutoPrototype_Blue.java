@@ -10,10 +10,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 import java.util.LinkedList;
 
-@Autonomous(name = "Auto Prototype1", group = "Concept")
+@Autonomous(name = "Auto Prototype2", group = "Concept")
 
 //Welcome to 2025's basic Auto!
-public class Auto_AutoPrototype extends LinearOpMode {
+public class Auto_AutoPrototype_Blue extends LinearOpMode {
     //Declare all your variables here. Keep similar variables together with a note as to what they are
     //These are our 4 motors
     public MonkeyMotor br;
@@ -76,30 +76,12 @@ public class Auto_AutoPrototype extends LinearOpMode {
         //Initialize our states for auto:
 
         //addDriveToTargetAction(9000, 600, 0.3);
-        //add_FaceAHeadingAction(-3, 0.5);
+        //add_FaceAHeadingAction(-3, 0 .5);
         //add_SetServoAction(sa, 1);
 
-
-
-//auto config
-        addDriveToTargetAction(1200, 380, 0.4);
-        add_FaceAHeadingAction(25*Math.PI/36, 0.4);
-        addwaitaction(3000);
-        add_FaceAHeadingAction(Math.PI/2, 0.7);
-        addDriveToTargetAction(1300, 950, 0.4);
-        addDriveToTargetAction(1200, 380, 0.4);
-        add_FaceAHeadingAction(3*Math.PI/4, 0.7);
-        addwaitaction(3000);
-        add_FaceAHeadingAction(Math.PI/2, 0.7);
-        addDriveToTargetAction(1900, 380, 0.4);
-        addDriveToTargetAction(1900, 950, 0.4);
-        addDriveToTargetAction(1900,380,0.4);
-        addDriveToTargetAction(1200, 380, 0.4);
-        add_FaceAHeadingAction(7*Math.PI/9, 0.7);
-        addwaitaction(3000);
-        addDriveToTargetAction(1600, 380, 0.4);
-        add_FaceAHeadingAction(Math.PI/2, 0.7);
-        addDriveToTargetAction(1600, 1000, 0.4);
+        addDriveToTargetAction(1600, -380, 0.4);
+        add_FaceAHeadingAction(-Math.PI/2, 0.7);
+        addDriveToTargetAction(1600, -1000, 0.4);
 
 
 
