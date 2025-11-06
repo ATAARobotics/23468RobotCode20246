@@ -3,8 +3,10 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 
@@ -13,8 +15,11 @@ public class DriveCode_Competiton extends LinearOpMode {
 
     public Chassis chassis;
 
-    public MonkeyMotor pew;
-    public MonkeyMotor pewpew;
+    public Launcher launcher;
+
+    public Intake intake;
+
+    public Wheel wheel;
 
     // SERVOS GO HERE
 
@@ -28,7 +33,7 @@ public class DriveCode_Competiton extends LinearOpMode {
 
 
     //OTHER FLAGS GO HERE
-
+    public boolean g1_up_flag = false;
 
     //CONSTRUCTS GO HERE
     GoBildaPinpointDriver odo;
@@ -45,11 +50,15 @@ public class DriveCode_Competiton extends LinearOpMode {
                 , new MonkeyMotor(hardwareMap, "bl")
         );
 
+        launcher = new Launcher(new MonkeyVelocityMotor(hardwareMap, "pew")
+                , new MonkeyVelocityMotor(hardwareMap, "pewpew")
+        );
 
-        pew = new MonkeyMotor(hardwareMap, "pew");
-        pewpew = new MonkeyMotor(hardwareMap, "pewpew");
+        intake = new Intake(new MonkeyMotor(hardwareMap, "TODO: GIVE INTAKE MOTOR A NAME"));
 
-        Servo gate = hardwareMap.get(Servo.class, "gate");
+        wheel = new Wheel(new MonkeyMotor(hardwareMap, "TODO: GIVE WHEEL MOTOR A NAME")
+                , hardwareMap.get(DigitalChannel.class, "TODO: Touch Sensor Name")
+        );
 
         odo = hardwareMap.get(GoBildaPinpointDriver.class,"odo");
         odo.setOffsets(-181.8, 24.4, DistanceUnit.MM);
@@ -79,6 +88,16 @@ public class DriveCode_Competiton extends LinearOpMode {
             chassis.setHeading(odo.getHeading()); //Must call before DRIVE
             chassis.DRIVE(-gamepad1.right_stick_y, gamepad1.right_stick_x, gamepad1.left_stick_x );
 
+
+            //TODO: ADD CONTROLS HERE
+
+            //Example button with touch protection
+            if (gamepad1.dpad_up && !g1_up_flag) {
+                g1_up_flag = true;
+                //Action here
+            } else if (!gamepad1.dpad_up) {
+                g1_up_flag = false;
+            }
 
 
             telemetry.addData("X:", odo.getPosX());
