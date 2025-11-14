@@ -18,14 +18,14 @@ public class MonkeyMotor extends Motor {
     public double targetPosition = 0.0;
     public double prevError = 0.0;
     public double coefficient_p = 1.1;
-    public double coefficient_d = 1;
+    public double coefficient_d = 1.2;
 
-    public double coefficient_p_rot = 1;
+    public double coefficient_p_rot = 1.25;
     public double coefficient_d_rot = 1;
 
     double curSpeed = 0.0;
     double prevSetSpeed = 0.0;
-    double maxAcceleration = 0.1;
+    double maxAcceleration = 0.05;
 
     double setSpeed = 0.0;
 

@@ -25,6 +25,4 @@ public class MonkeyVelocityMotor extends Motor {
         super.set(output);
     }
 
-
-
 }

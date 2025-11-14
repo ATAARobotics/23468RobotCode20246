@@ -67,9 +67,9 @@ public class Auto_FaceAHeading extends State {
 
         double adjustment = speed;
 
-        fr.set_pd_rotate(-adjustment, diff);
+        fr.set_pd_rotate(adjustment, diff);
         fl.set_pd_rotate(adjustment, diff);
-        br.set_pd_rotate(adjustment, diff);
+        br.set_pd_rotate(-adjustment, diff);
         bl.set_pd_rotate(adjustment, diff);
 
     }

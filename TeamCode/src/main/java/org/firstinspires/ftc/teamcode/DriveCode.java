@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.arcrobotics.ftclib.hardware.motors.CRServo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -28,6 +29,7 @@ public class DriveCode extends LinearOpMode {
     // SERVOS GO HERE
 
     public Servo gate;
+    public MonkeyCRServo wheelServo;
 
     //BUTTONS & CONTROLS GO HERE
     public float LeftStickUPDOWN;

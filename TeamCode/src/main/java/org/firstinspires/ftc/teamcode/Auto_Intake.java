@@ -4,11 +4,8 @@ import static java.lang.Math.abs;
 import static java.lang.Math.pow;
 import static java.lang.Math.sqrt;
 
-import com.arcrobotics.ftclib.hardware.motors.Motor;
-import com.qualcomm.robotcore.hardware.DcMotor;
 
-
-public class Auto_DriveToTarget extends State {
+public class Auto_Intake extends State {
     public MonkeyMotor br;
     public MonkeyMotor bl;
     public MonkeyMotor fr;
@@ -33,7 +30,9 @@ public class Auto_DriveToTarget extends State {
     public double rx = 0;
     public double ry = 0;
 
-    public Auto_DriveToTarget(double targetx, double targety, double power, MonkeyMotor br, MonkeyMotor bl, MonkeyMotor fr, MonkeyMotor fl){
+    Intake intake;
+
+    public Auto_Intake(double targetx, double targety, double power, MonkeyMotor br, MonkeyMotor bl, MonkeyMotor fr, MonkeyMotor fl, Intake intake){
         this.br = br;
         this.bl = bl;
         this.fr = fr;
@@ -43,6 +42,8 @@ public class Auto_DriveToTarget extends State {
 
         this.targetx = targetx;
         this.targety = targety;
+
+        this.intake = intake;
     }
 
 
@@ -61,6 +62,7 @@ public class Auto_DriveToTarget extends State {
             br.set(0);
             fl.set(0);
             fl.set(0);
+            intake.stop();
             return true;
         }
         return false;
@@ -69,13 +71,15 @@ public class Auto_DriveToTarget extends State {
     @Override
     public void action(){
 
+        intake.start();
+
         dx = targetx - curx;
         dy = targety - cury;
 
         totaldist = sqrt( pow(dx, 2) + pow(dy, 2) );
 
         ry = (Math.cos(curh)*dx + Math.sin(curh)*dy) / (totaldist);
-        rx = (Math.sin(curh)*dx + -1 * Math.cos(curh)*dy) / (totaldist);
+        rx = (Math.sin(curh)*dx + -1*Math.cos(curh)*dy) / (totaldist);
 
 
         double adjustment = coefficient*(curh - targetH);
