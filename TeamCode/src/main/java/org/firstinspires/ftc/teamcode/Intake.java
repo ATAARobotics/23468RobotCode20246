@@ -3,28 +3,35 @@ package org.firstinspires.ftc.teamcode;
 
 public class Intake {
 
-    public static int DIRECTION_FORWARD = 1;
-    public static int DIRECTION_REVERSE = -1;
-
     public double POWER = 1;
 
     //vars: motors and var for current mode
-    public MonkeyMotor intakeMotor;
-    public int direction = DIRECTION_FORWARD;
-    public double isRunning = 0;
+    public MonkeyCRServo_PowerMode intakeMotor;
+    public MonkeyCRServo_PowerMode intakeMotor2;
 
-    public long runForIncrementStart;
-    public boolean runForIncrement = false;
+    public MonkeyCRServo_PowerMode innerMotor;
+    public MonkeyCRServo_PowerMode innerMotor2;
+
+    public int direction = 1;
+    public int isRunning = 0;
+    public int isHold = 0;
+
+    //public long runForIncrementStart;
+    //public boolean runForIncrement = false;
 
 
-    public Intake(MonkeyMotor motor) {
+    public Intake(MonkeyCRServo_PowerMode intakeMotor,
+                  MonkeyCRServo_PowerMode intakeMotor2,
+                  MonkeyCRServo_PowerMode innerMotor,
+                  MonkeyCRServo_PowerMode innerMotor2) {
         // save motors
-        this.intakeMotor = motor;
+        this.intakeMotor = intakeMotor;
+        this.intakeMotor2 = intakeMotor2;
+        this.innerMotor = innerMotor;
+        this.innerMotor2 = innerMotor2;
+
     }
 
-    public int getDirection() {
-        return direction;
-    }
 
     public void toggleDirection() {
         // swap direction
@@ -36,19 +43,14 @@ public class Intake {
         this.direction = direction;
     }
 
-    public void runForIncrement() {
-        runForIncrement = true;
-        runForIncrementStart = System.currentTimeMillis();
-    }
-
     public void start() {
         //start the intake in the desired direction
         isRunning = 1;
     }
 
-    public void slow() {
+    public void startHold() {
         //start the intake in the desired direction
-        isRunning = 0.4;
+        isHold = 1;
     }
 
     public void stop() {
@@ -56,17 +58,23 @@ public class Intake {
         isRunning = 0;
     }
 
+    public void stopHold() {
+        //turn the intake off
+        isHold = 0;
+    }
+
     public void run() {
-        if (isRunning == 1 ) {
+        if (isRunning == 1 || isHold == 1) {
             intakeMotor.set(POWER * direction);
-        } else if (runForIncrement) {
-            intakeMotor.set(POWER * direction);
-            if (System.currentTimeMillis() - runForIncrementStart > 1000) {
-                runForIncrement = false;
-            }
+            intakeMotor2.set(POWER * direction);
+
         } else {
             intakeMotor.set(0);
+            intakeMotor2.set(0);
         }
+
+        innerMotor.set(POWER * direction);
+        innerMotor2.set(POWER * direction);
 
     }
 

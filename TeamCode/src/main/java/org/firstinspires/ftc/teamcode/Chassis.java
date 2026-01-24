@@ -1,6 +1,11 @@
 package org.firstinspires.ftc.teamcode;
 
 
+import com.arcrobotics.ftclib.geometry.Transform2d;
+import com.arcrobotics.ftclib.geometry.Vector2d;
+
+import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
+
 public class Chassis {
     //PARAMETERS:
     double sped = 1.0;
@@ -12,20 +17,22 @@ public class Chassis {
     public MonkeyMotor fr;
     public MonkeyMotor fl;
 
+    public GoBildaPinpointDriver odo;
+
     public double targetHeading = 0.0;
     public double currentHeading = 0.0;
 
-    public long duration = 99999;
-    public long lastTime = 0;
+    public double x_prev = 0;
+    public double y_prev = 0;
 
-
-
-    public Chassis(MonkeyMotor fr, MonkeyMotor fl, MonkeyMotor br, MonkeyMotor bl) {
+    public Chassis(MonkeyMotor fr, MonkeyMotor fl, MonkeyMotor br, MonkeyMotor bl, GoBildaPinpointDriver odo) {
         // save motors
         this.fr = fr;
         this.fl = fl;
         this.br = br;
         this.bl = bl;
+
+        this.odo = odo;
 
 
     }
@@ -38,6 +45,12 @@ public class Chassis {
         this.DRIVE(-0.4, 0, rotateStick, true); //up is negitive on the controller
     }
 
+    public void averageDirectionOverSecond() {
+
+
+
+    }
+
     public void DRIVE(double forwardStick, double strafeStick, double rotateStick, boolean turbo) {
         long t = System.currentTimeMillis();
 
@@ -45,36 +58,27 @@ public class Chassis {
         if (!turbo) {
             forwardStick = forwardStick / 1.3;
             strafeStick = strafeStick * 1.1 / 1.3;
-            rotateStick = rotateStick / 1.3;
+            rotateStick = rotateStick / 1.6;
         }
-        double lx = rotateStick;
 
         if (rotateStick == 0 ) {
             //keep heading as 0
-            if (duration > 300) {
-                lx = keepHeadingCoefficient*(currentHeading - targetHeading);
-                if ( Math.abs(lx) < 0.02 ) {
-                    lx = 0;
-                }
-            } else {
-
-                duration = t - lastTime;
-                lastTime = t;
-                targetHeading = currentHeading;
+            rotateStick = keepHeadingCoefficient*(currentHeading - targetHeading);
+            if ( Math.abs(rotateStick) < 0.02 ) {
+                rotateStick = 0;
             }
-
         } else {
-            duration = 0;
             targetHeading = currentHeading;
         }
 
 
-        double denominator = Math.max(Math.abs(forwardStick) + Math.abs(strafeStick) + Math.abs(lx), 1);
 
-        fr.set_accelerate((forwardStick + strafeStick + lx * rxSped) / denominator * sped);
-        fl.set_accelerate((-forwardStick + strafeStick + lx * rxSped) / denominator * sped);
-        br.set_accelerate((-forwardStick + strafeStick - lx * rxSped) / denominator * sped);
-        bl.set_accelerate ((-forwardStick - strafeStick + lx * rxSped) / denominator * sped);
+        double denominator = Math.max(Math.abs(forwardStick) + Math.abs(strafeStick) + Math.abs(rotateStick), 1);
+
+        fr.set_accelerate((forwardStick + strafeStick + rotateStick * rxSped) / denominator * sped);
+        fl.set_accelerate((-forwardStick + strafeStick + rotateStick * rxSped) / denominator * sped);
+        br.set_accelerate((-forwardStick + strafeStick - rotateStick * rxSped) / denominator * sped);
+        bl.set_accelerate ((-forwardStick - strafeStick + rotateStick * rxSped) / denominator * sped);
     }
 
 

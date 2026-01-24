@@ -1,77 +1,51 @@
 package org.firstinspires.ftc.teamcode;
 
-
-import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
-import com.qualcomm.robotcore.hardware.CRServo;
-
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import com.arcrobotics.ftclib.hardware.motors.CRServo;
+import com.arcrobotics.ftclib.hardware.motors.Motor.Encoder;
 
 public class Wheel {
-    public boolean flag;
-    //vars: motors and var for current position
-    Rev2mDistanceSensor distanceSensor;
-    MonkeyCRServo motor;
-    Intake intake;
 
-    int count = 0;
+    public MonkeyEncodedCRServo_PositionMode gen_servo1;
+    public MonkeyEncodedCRServo_PositionMode gen_servo2;
 
-    public long milis;
+    public Encoder wheelEncoder;
 
+    public boolean CanTurn = true;
+    public int encoderTargetPos = 0;
 
-    public Wheel(MonkeyCRServo motor, Rev2mDistanceSensor distanceSensor, Intake intake) {
+    public static int NOTCH = 2710;
+    public static int ERROR = 200;
+
+    public Wheel(CRServo gen_servo1, CRServo gen_servo2, Encoder wheelEncoder) {
         // save motors, initialize to desired starting position
-        this.motor = motor;
-        this.distanceSensor = distanceSensor;
-        this.intake = intake;
-        //milis = System.currentTimeMillis();
-        motor.setTargetPosition(31);
-    }
-
-    public void toggleWheelForward() {
-        // move the wheel one notch forward
-        if (count < 2) {
-            motor.setTargetPosition( motor.targetPos - 2746 );
-            count += 1;
-        }
-
-
+        this.gen_servo1 = new MonkeyEncodedCRServo_PositionMode(gen_servo1, wheelEncoder);
+        this.gen_servo2 = new MonkeyEncodedCRServo_PositionMode(gen_servo2, wheelEncoder);
+        this.wheelEncoder = wheelEncoder;
     }
 
     public void toggleWheelForwardForce() {
-        // move the wheel one notch forward
-        motor.setTargetPosition( motor.targetPos - 2730 );
-        count += 1;
-
-    }
-
-    public void toggleWheelFireAll() {
-        // move the wheel one notch forward
-        motor.setTargetPosition( motor.targetPos - 8240 );
-        count = 0;
-
+        if (CanTurn) {
+            CanTurn = false;
+            encoderTargetPos += NOTCH;
+            // move the wheel one notch forward
+            gen_servo1.setTargetPosition(encoderTargetPos);
+            gen_servo2.setTargetPosition(encoderTargetPos);
+        }
     }
 
 
-    public boolean isBottomIndexFull() {
-        return true;
-    }
+    public void run() {
 
-    public void run(){
-        if (distanceSensor.getDistance(DistanceUnit.MM)<40){
-            flag = true;
+        if( Math.abs(encoderTargetPos - wheelEncoder.getPosition()) < ERROR ){
+            CanTurn = true;
+            gen_servo1.setTargetPosition(wheelEncoder.getPosition());
+            gen_servo2.setTargetPosition(wheelEncoder.getPosition());
             //milis = System.currentTimeMillis();
         }
-        if(flag && distanceSensor.getDistance(DistanceUnit.MM)>80){
-            toggleWheelForward();
-            flag = false;
 
-        }
-        /*
-        if (motor.stallMode) {
-            intake.runForIncrement();
-        }
-        */
 
+        gen_servo1.run();
+        gen_servo2.run();
     }
 
 }

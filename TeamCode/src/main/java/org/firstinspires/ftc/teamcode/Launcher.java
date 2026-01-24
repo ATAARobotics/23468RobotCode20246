@@ -4,9 +4,9 @@ package org.firstinspires.ftc.teamcode;
 public class Launcher {
 
     public static double IDLE_SPEED = 0.0;
-    public static double SLOW_SPEED = 0.95+0.06;
-    public static double MID_SPEED = 1.07+0.06;
-    public static double FAST_SPEED = 1.3;
+    public static double SLOW_SPEED = 0.93;
+    public static double MID_SPEED = 0.97;
+    public static double FAST_SPEED = 1.1 ;
 
     public static int MODE_STOP = 0;
     //public static int MODE_IDLE = 1;
