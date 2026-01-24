@@ -32,9 +32,13 @@ package org.firstinspires.ftc.teamcode;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.arcrobotics.ftclib.hardware.motors.CRServo;
+import com.arcrobotics.ftclib.hardware.motors.Motor;
+import com.arcrobotics.ftclib.hardware.motors.Motor.Encoder;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import java.util.List;
@@ -69,6 +73,16 @@ public class Flywheel_Run extends OpMode
     private Flywheel_Config flywheel = null;
     private Flywheel_Config flywheel1 = null;
 
+    private Wheel Indexer=null;
+    private CRServo Servo1=null;
+    private CRServo Servo2=null;
+    private Servo ServoRight=null;
+    private Servo ServoLeft=null;
+    private LaunchSelector LaunchSelector=null;
+    private Motor WheelEncoder=null;
+
+    private boolean x_pressed = false;
+
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -88,7 +102,13 @@ public class Flywheel_Run extends OpMode
 
         flywheel = new Flywheel_Config(ControlHub, hardwareMap, "flywheel");
         flywheel1 = new Flywheel_Config(ControlHub, hardwareMap, "flywheel1");
-
+        Servo1=new CRServo(hardwareMap, "Servo1");
+        Servo2=new CRServo(hardwareMap, "Servo2");
+        ServoRight=hardwareMap.get(Servo.class, "ServoRight");
+        ServoLeft=hardwareMap.get(Servo.class, "ServoLeft");
+        WheelEncoder=new Motor(hardwareMap, "WheelEncoder");
+        Indexer=new Wheel(Servo1, Servo2, WheelEncoder.encoder);
+        LaunchSelector = new LaunchSelector(ServoRight, ServoLeft);
         telemetry.addData("Status", "Initialized");
 
     }
@@ -120,20 +140,31 @@ public class Flywheel_Run extends OpMode
 
         long curr_time = runtime.nanoseconds();
 
-        if (gamepad1.x) {
+        if (gamepad1.left_bumper) {
             flywheel.setRPM(RPM_SETPOINT);
             flywheel1.setRPM(RPM_SETPOINT);
         } else {
             flywheel.setPower(0);
             flywheel1.setPower(0);
         }
+        if (gamepad1.right_bumper) {
+            Indexer.toggleWheelForwardForce();
+        }
+        if (gamepad1.x && !x_pressed) {
+            LaunchSelector.ToggleLauncher();
+            x_pressed = true;
+        } else if (!gamepad1.x) {
+            x_pressed = false;
+        }
 
         double rpm = flywheel.getVelocity() * 60 / 28;
+        Indexer.run();
 
         telemetry.addData("RPM Value: ", rpm);
         telemetry.addData("Power: ", flywheel.getPower());
         telemetry.addData("Avg V: ", flywheel.getAverageVoltage());
         telemetry.addData("Time: ", curr_time);
+        telemetry.addData("X: ", x_pressed);
 
         telemetry.update();
 
