@@ -67,6 +67,7 @@ public class Flywheel_Run extends OpMode
     public static int RPM_SETPOINT = 1000;
 
     private Flywheel_Config flywheel = null;
+    private Flywheel_Config flywheel1 = null;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -86,6 +87,7 @@ public class Flywheel_Run extends OpMode
         }
 
         flywheel = new Flywheel_Config(ControlHub, hardwareMap, "flywheel");
+        flywheel1 = new Flywheel_Config(ControlHub, hardwareMap, "flywheel1");
 
         telemetry.addData("Status", "Initialized");
 
@@ -120,8 +122,10 @@ public class Flywheel_Run extends OpMode
 
         if (gamepad1.x) {
             flywheel.setRPM(RPM_SETPOINT);
+            flywheel1.setRPM(RPM_SETPOINT);
         } else {
             flywheel.setPower(0);
+            flywheel1.setPower(0);
         }
 
         double rpm = flywheel.getVelocity() * 60 / 28;
