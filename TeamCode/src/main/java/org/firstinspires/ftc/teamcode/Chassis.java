@@ -25,14 +25,14 @@ public class Chassis {
     public double x_prev = 0;
     public double y_prev = 0;
 
-    public Chassis(MonkeyMotor fr, MonkeyMotor fl, MonkeyMotor br, MonkeyMotor bl, GoBildaPinpointDriver odo) {
+    public Chassis(MonkeyMotor fr, MonkeyMotor fl, MonkeyMotor br, MonkeyMotor bl) {
         // save motors
         this.fr = fr;
         this.fl = fl;
         this.br = br;
         this.bl = bl;
 
-        this.odo = odo;
+        //this.odo = odo;
 
 
     }
@@ -76,8 +76,8 @@ public class Chassis {
         double denominator = Math.max(Math.abs(forwardStick) + Math.abs(strafeStick) + Math.abs(rotateStick), 1);
 
         fr.set_accelerate((forwardStick + strafeStick + rotateStick * rxSped) / denominator * sped);
-        fl.set_accelerate((-forwardStick + strafeStick + rotateStick * rxSped) / denominator * sped);
-        br.set_accelerate((-forwardStick + strafeStick - rotateStick * rxSped) / denominator * sped);
+        fl.set_accelerate((forwardStick - strafeStick - rotateStick * rxSped) / denominator * sped);
+        br.set_accelerate((forwardStick - strafeStick + rotateStick * rxSped) / denominator * sped);
         bl.set_accelerate ((-forwardStick - strafeStick + rotateStick * rxSped) / denominator * sped);
     }
 

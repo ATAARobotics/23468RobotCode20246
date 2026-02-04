@@ -53,6 +53,7 @@ import com.qualcomm.robotcore.util.Range;
  */
 
 @TeleOp(name="ServoTest", group="Concept")
+@Disabled
 public class Servo_Test extends LinearOpMode {
 
     // Declare OpMode members.

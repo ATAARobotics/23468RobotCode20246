@@ -107,7 +107,7 @@ public class Flywheel_Run extends OpMode
         ServoRight=hardwareMap.get(Servo.class, "ServoRight");
         ServoLeft=hardwareMap.get(Servo.class, "ServoLeft");
         WheelEncoder=new Motor(hardwareMap, "WheelEncoder");
-        Indexer=new Wheel(Servo1, Servo2, WheelEncoder.encoder);
+        //Indexer=new Wheel(Servo1, Servo2, WheelEncoder.encoder);
         LaunchSelector = new LaunchSelector(ServoRight, ServoLeft);
         telemetry.addData("Status", "Initialized");
 

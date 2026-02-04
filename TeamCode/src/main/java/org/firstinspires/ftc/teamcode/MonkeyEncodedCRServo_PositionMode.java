@@ -27,8 +27,18 @@ public class MonkeyEncodedCRServo_PositionMode {
         this.targetPos = target;
     }
 
-    public void run() {
-        double error = targetPos - encoder.getPosition();
+    public void run(int encoderPos) {
+
+        double error = this.targetPos - encoderPos;
+
+        if ( Math.abs(error) > 200 ) {
+            servo.set(error / Math.abs(error));
+        } else {
+            servo.set(0);
+
+        }
+
+        /*double error = targetPos - encoder.getPosition();
         double dir = 1;
 
         if (error != 0) {
@@ -37,20 +47,12 @@ public class MonkeyEncodedCRServo_PositionMode {
 
         double power = 0;
 
-        if ( error < 0 ) {
-            /*
-            power = Math.min(
-                    (pid_p * 0.0006 * error) + (pid_d * 0.00002 * (error - prevError))
-                    , 1);
-
-            prevError = error;
-            servo.set( power );
-            */
+        if ( Math.abs(error) < 200 ) {
             servo.set(1 * dir);
         } else {
             servo.set(0);
-            //targetPos = encoder.getCurrentPosition();
-        }
+
+        }*/
     }
 
 

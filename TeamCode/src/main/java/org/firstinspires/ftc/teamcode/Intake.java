@@ -1,16 +1,20 @@
 package org.firstinspires.ftc.teamcode;
 
 
+import com.arcrobotics.ftclib.hardware.motors.CRServo;
+
 public class Intake {
 
-    public double POWER = 1;
+    public double POWER = 0.5;
 
     //vars: motors and var for current mode
-    public MonkeyCRServo_PowerMode intakeMotor;
-    public MonkeyCRServo_PowerMode intakeMotor2;
+    //public CRServo intakeMotor;
+    //public CRServo intakeMotor2;
 
-    public MonkeyCRServo_PowerMode innerMotor;
-    public MonkeyCRServo_PowerMode innerMotor2;
+    public MonkeyMotor intakeMotor;
+
+    public CRServo innerMotorL;
+    public CRServo innerMotorR;
 
     public int direction = 1;
     public int isRunning = 0;
@@ -20,15 +24,15 @@ public class Intake {
     //public boolean runForIncrement = false;
 
 
-    public Intake(MonkeyCRServo_PowerMode intakeMotor,
-                  MonkeyCRServo_PowerMode intakeMotor2,
-                  MonkeyCRServo_PowerMode innerMotor,
-                  MonkeyCRServo_PowerMode innerMotor2) {
+    public Intake(MonkeyMotor intakeMotor,
+                  //CRServo intakeMotor2,
+                  CRServo innerMotorL,
+                  CRServo innerMotorR) {
         // save motors
         this.intakeMotor = intakeMotor;
-        this.intakeMotor2 = intakeMotor2;
-        this.innerMotor = innerMotor;
-        this.innerMotor2 = innerMotor2;
+        //this.intakeMotor2 = intakeMotor2;
+        this.innerMotorL = innerMotorL;
+        this.innerMotorR = innerMotorR;
 
     }
 
@@ -65,16 +69,16 @@ public class Intake {
 
     public void run() {
         if (isRunning == 1 || isHold == 1) {
-            intakeMotor.set(POWER * direction);
-            intakeMotor2.set(POWER * direction);
+            intakeMotor.set(POWER * direction * -1);
+            //intakeMotor2.set(POWER * direction);
 
         } else {
             intakeMotor.set(0);
-            intakeMotor2.set(0);
+            //intakeMotor2.set(0);
         }
 
-        innerMotor.set(POWER * direction);
-        innerMotor2.set(POWER * direction);
+        innerMotorL.set(POWER * direction * -1);
+        innerMotorR.set(POWER * direction);
 
     }
 
