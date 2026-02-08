@@ -9,7 +9,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 public class Chassis {
     //PARAMETERS:
     double sped = 1.0;
-    double rxSped = 0.75;
+    double rxSped = 0.8;
     double keepHeadingCoefficient = 1.4;
 
     public MonkeyMotor br;
@@ -22,8 +22,9 @@ public class Chassis {
     public double targetHeading = 0.0;
     public double currentHeading = 0.0;
 
-    public double x_prev = 0;
-    public double y_prev = 0;
+    public double coefficient_p_rot = 1.25;
+    public double coefficient_d_rot = 0.93;
+    public double prevError = 0.0;
 
     public Chassis(MonkeyMotor fr, MonkeyMotor fl, MonkeyMotor br, MonkeyMotor bl) {
         // save motors
@@ -45,33 +46,47 @@ public class Chassis {
         this.DRIVE(-0.4, 0, rotateStick, true); //up is negitive on the controller
     }
 
-    public void averageDirectionOverSecond() {
+    public void turnTowards(double yaw){
 
+        //double error = ((currentHeading - targetHeading + Math.PI) % (2 * Math.PI)) - Math.PI;
+        double error = Math.atan2(Math.sin(currentHeading - targetHeading), Math.cos(currentHeading - targetHeading));
 
+        double test_auto = Math.min(
+                (coefficient_p_rot * 1 * error) + (coefficient_d_rot * 1.1 * (error - prevError))
+                , 1);
+        prevError = error;
+
+        double adjustment = test_auto * 0.4;
+
+        fr.set_accelerate(adjustment * rxSped);
+        fl.set_accelerate(-adjustment * rxSped);
+        br.set_accelerate(adjustment * rxSped);
+        bl.set_accelerate(adjustment * rxSped);
 
     }
 
     public void DRIVE(double forwardStick, double strafeStick, double rotateStick, boolean turbo) {
-        long t = System.currentTimeMillis();
-
+        //long t = System.currentTimeMillis();
 
         if (!turbo) {
-            forwardStick = forwardStick / 1.3;
-            strafeStick = strafeStick * 1.1 / 1.3;
-            rotateStick = rotateStick / 1.6;
+            forwardStick = forwardStick / 1.2;
+            strafeStick = strafeStick * 1.1 / 1.2;
+            rotateStick = rotateStick / 1.4;
         }
 
-        if (rotateStick == 0 ) {
-            //keep heading as 0
-            rotateStick = keepHeadingCoefficient*(currentHeading - targetHeading);
-            if ( Math.abs(rotateStick) < 0.02 ) {
-                rotateStick = 0;
-            }
+        if (Math.abs(rotateStick) < 0.01 ) {
+            double error = Math.atan2(Math.sin(currentHeading - targetHeading), Math.cos(currentHeading - targetHeading ));
+            //double error = ((currentHeading - targetHeading + Math.PI) % (2 * Math.PI)) - Math.PI;
+
+            double test_auto = Math.min(
+                    (coefficient_p_rot * 1 * error) + (coefficient_d_rot * 1.1 * (error - prevError))
+                    , 1);
+            prevError = error;
+
+            rotateStick = test_auto * 0.4;
         } else {
             targetHeading = currentHeading;
         }
-
-
 
         double denominator = Math.max(Math.abs(forwardStick) + Math.abs(strafeStick) + Math.abs(rotateStick), 1);
 

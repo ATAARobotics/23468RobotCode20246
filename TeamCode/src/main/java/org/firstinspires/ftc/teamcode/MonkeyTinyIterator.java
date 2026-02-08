@@ -13,17 +13,11 @@ public class MonkeyTinyIterator {
     public static int GPP = 2;
     public static int PGP = 3;
 
-    public int currM = 0;
-
     public ArrayList<Integer> states = new ArrayList<>(Arrays.asList(NONE,NONE,NONE));
     public int cursor = 0;
 
     public MonkeyTinyIterator(){
 
-    }
-
-    public void setMotief(int motief) {
-        currM = motief;
     }
 
     public void next() {
@@ -63,37 +57,37 @@ public class MonkeyTinyIterator {
         ArrayList<Integer> translated = new ArrayList<>(Arrays.asList( states.get(cursor),states.get((cursor+1) % 3),states.get((cursor+2) % 3)));
 
         if ( translated.get(0) == NONE ) {
-            if ( translated.get(1) == NONE || translated.get(2) != NONE ) {
+            if ( translated.get(1) == NONE && translated.get(2) != NONE ) {
                 return 2;
             } else {
                 return 0;
             }
-        } else if (currM == PPG) {
-            if (translated.get(0) == GREEN && translated.get(1) == PURPLE && translated.get(2) == PURPLE) {  return 1; }
+        } else if (SaveData.detectedMotief == PPG) {
+            if (translated.get(0) == GREEN && translated.get(1) == PURPLE && translated.get(2) == PURPLE) {  return 0; }
+            else if (translated.get(0) == GREEN && translated.get(1) == GREEN && translated.get(2) == PURPLE) {  return 0; }
+            else if (translated.get(0) == GREEN && translated.get(1) == GREEN && translated.get(2) == GREEN) {  return 0; }
+            else if (translated.get(0) == PURPLE && translated.get(1) == GREEN && translated.get(2) == GREEN) {  return 1; }
+            else if (translated.get(0) == PURPLE && translated.get(1) == PURPLE && translated.get(2) == GREEN) {  return 1; }
+            else if (translated.get(0) == PURPLE && translated.get(1) == PURPLE && translated.get(2) == PURPLE) {  return 0; }
+            else if (translated.get(0) == PURPLE && translated.get(1) == GREEN && translated.get(2) == PURPLE) {  return 2; }
+            else if (translated.get(0) == GREEN && translated.get(1) == PURPLE && translated.get(2) == GREEN) {  return 0; }
+            else { return 1; }
+        } else if (SaveData.detectedMotief == GPP) {
+            if (translated.get(0) == GREEN && translated.get(1) == PURPLE && translated.get(2) == PURPLE) {  return 2; }
             else if (translated.get(0) == GREEN && translated.get(1) == GREEN && translated.get(2) == PURPLE) {  return 1; }
             else if (translated.get(0) == GREEN && translated.get(1) == GREEN && translated.get(2) == GREEN) {  return 0; }
             else if (translated.get(0) == PURPLE && translated.get(1) == GREEN && translated.get(2) == GREEN) {  return 0; }
             else if (translated.get(0) == PURPLE && translated.get(1) == PURPLE && translated.get(2) == GREEN) {  return 0; }
             else if (translated.get(0) == PURPLE && translated.get(1) == PURPLE && translated.get(2) == PURPLE) {  return 0; }
-            else if (translated.get(0) == PURPLE && translated.get(1) == GREEN && translated.get(2) == PURPLE) {  return 2; }
-            else if (translated.get(0) == GREEN && translated.get(1) == PURPLE && translated.get(2) == GREEN) {  return 2; }
-            else { return 1; }
-        } else if (currM == GPP) {
-            if (translated.get(0) == GREEN && translated.get(1) == PURPLE && translated.get(2) == PURPLE) {  return 0; }
-            else if (translated.get(0) == GREEN && translated.get(1) == GREEN && translated.get(2) == PURPLE) {  return 0; }
-            else if (translated.get(0) == GREEN && translated.get(1) == GREEN && translated.get(2) == GREEN) {  return 0; }
-            else if (translated.get(0) == PURPLE && translated.get(1) == GREEN && translated.get(2) == GREEN) {  return 1; }
-            else if (translated.get(0) == PURPLE && translated.get(1) == PURPLE && translated.get(2) == GREEN) {  return 2; }
-            else if (translated.get(0) == PURPLE && translated.get(1) == PURPLE && translated.get(2) == PURPLE) {  return 0; }
             else if (translated.get(0) == PURPLE && translated.get(1) == GREEN && translated.get(2) == PURPLE) {  return 1; }
             else if (translated.get(0) == GREEN && translated.get(1) == PURPLE && translated.get(2) == GREEN) {  return 0; }
             else { return 1; }
-        } else if (currM == PGP) {
-            if (translated.get(0) == GREEN && translated.get(1) == PURPLE && translated.get(2) == PURPLE) {  return 2; }
+        } else if (SaveData.detectedMotief == PGP) {
+            if (translated.get(0) == GREEN && translated.get(1) == PURPLE && translated.get(2) == PURPLE) {  return 1; }
             else if (translated.get(0) == GREEN && translated.get(1) == GREEN && translated.get(2) == PURPLE) {  return 0; }
             else if (translated.get(0) == GREEN && translated.get(1) == GREEN && translated.get(2) == GREEN) {  return 0; }
             else if (translated.get(0) == PURPLE && translated.get(1) == GREEN && translated.get(2) == GREEN) {  return 0; }
-            else if (translated.get(0) == PURPLE && translated.get(1) == PURPLE && translated.get(2) == GREEN) {  return 1; }
+            else if (translated.get(0) == PURPLE && translated.get(1) == PURPLE && translated.get(2) == GREEN) {  return 2; }
             else if (translated.get(0) == PURPLE && translated.get(1) == PURPLE && translated.get(2) == PURPLE) {  return 0; }
             else if (translated.get(0) == PURPLE && translated.get(1) == GREEN && translated.get(2) == PURPLE) {  return 0; }
             else if (translated.get(0) == GREEN && translated.get(1) == PURPLE && translated.get(2) == GREEN) {  return 1; }

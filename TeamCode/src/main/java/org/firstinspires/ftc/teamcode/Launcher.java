@@ -3,10 +3,13 @@ package org.firstinspires.ftc.teamcode;
 
 public class Launcher {
 
+    public boolean fallback = false;
+
+    //fallback mode
     public static double IDLE_SPEED = 0.0;
-    public static double SLOW_SPEED = 0.4;
-    public static double MID_SPEED = 0.75;
-    public static double FAST_SPEED = 1 ;
+    public static double SLOW_SPEED = 0.69;
+    public static double MID_SPEED = 0.83;
+    public static double FAST_SPEED = 0.92;
 
     public static int MODE_STOP = 0;
     //public static int MODE_IDLE = 1;
@@ -23,11 +26,17 @@ public class Launcher {
     private int mode = MODE_STOP;
     public boolean idle = false;
 
+    public double override = 0;
+
 
     public Launcher(MonkeyVelocityMotor motor1, MonkeyVelocityMotor motor2) {
         // save motors
         this.motor1 = motor1;
         this.motor2 = motor2;
+    }
+
+    public void fallbackLauncher() {
+        this.fallback = true;
     }
 
     public void adjustLauncherFaster() {
@@ -87,19 +96,23 @@ public class Launcher {
         }
     }
 
+    public void setToDistance (double distance) {
+        override = distance/77;
+    }
+
+    public void manualControl() {
+        override = 0;
+    }
+
     public void run() {
         if ( mode == MODE_STOP) {
             motor1.set(0);
             motor2.set(0);
-        } else if (idle) {
-            if (motor1.encoder.getRawVelocity() < 600) {
-                motor1.set(0.7);
-                motor2.set(0.7);
-            } else {
-                motor1.set(0.3);
-                motor2.set(0.3);
-            }
+        } else if (override > 0) {
+            motor1.set(override);
+            motor2.set(override);
         } else {
+
             if (mode == MODE_SLOW) {
                 target = SLOW_SPEED;
             } else if (mode == MODE_MID) {
@@ -112,6 +125,7 @@ public class Launcher {
 
             motor1.set(target + adjustment);
             motor2.set(target + adjustment);
+
         }
 
     }

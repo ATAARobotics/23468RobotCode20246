@@ -33,7 +33,11 @@ public class MonkeyEncodedCRServo_PositionMode {
 
         if ( Math.abs(error) > 200 ) {
             servo.set(error / Math.abs(error));
-        } else {
+        }
+        if ( Math.abs(error) > 100 ) {
+            servo.set(error * 0.3 / Math.abs(error));
+        }
+        else {
             servo.set(0);
 
         }

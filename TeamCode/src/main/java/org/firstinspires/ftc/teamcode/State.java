@@ -1,0 +1,38 @@
+package org.firstinspires.ftc.teamcode;
+
+
+public class State {
+
+    public double targetH;
+
+    public int stallcount = 0;
+
+    public State() {
+    }
+
+    public boolean truefalse(){
+        return true;
+    }
+
+    public void action(){
+
+    }
+
+    public void setCurrentLocationAndRotation (double x_mm, double y_mm, double heading_rad){
+    }
+
+    public void initializeState(double targetH) {
+        this.targetH = targetH;
+        this.stallcount = 0 ;
+    }
+
+    public double stop() {
+        return targetH;
+    }
+
+    public String readStateData() {
+        return "default state";
+    }
+
+
+}

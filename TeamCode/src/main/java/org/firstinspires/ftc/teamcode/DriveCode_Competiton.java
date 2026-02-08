@@ -2,11 +2,8 @@ package org.firstinspires.ftc.teamcode;
 
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
-import com.qualcomm.hardware.rev.RevTouchSensor;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import com.arcrobotics.ftclib.hardware.motors.CRServo;
@@ -17,11 +14,13 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.WhiteBa
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
+import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvWebcam;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 
@@ -73,7 +72,7 @@ public class DriveCode_Competiton extends LinearOpMode {
                 , new MonkeyMotor(hardwareMap, "bl")
         );
 
-        //Camera
+        //Interior Camera
         WebcamName webcamName = hardwareMap.get(WebcamName.class, "ColorSensor");
         OpenCvWebcam frontCamera = OpenCvCameraFactory.getInstance().createWebcam(webcamName);
         frontCamera.setPipeline( cameraPipeline );
@@ -82,7 +81,7 @@ public class DriveCode_Competiton extends LinearOpMode {
             @Override
             public void onOpened()
             {
-                frontCamera.startStreaming(640, 480, OpenCvCameraRotation.UPRIGHT);
+                frontCamera.startStreaming(640, 480, OpenCvCameraRotation.UPRIGHT, OpenCvWebcam.StreamFormat.MJPEG);
                 frontCamera.getWhiteBalanceControl().setMode(WhiteBalanceControl.Mode.MANUAL);
                 frontCamera.getWhiteBalanceControl().setWhiteBalanceTemperature(3000);// 3000
                 frontCamera.getExposureControl().setMode(ExposureControl.Mode.Manual);
@@ -92,6 +91,9 @@ public class DriveCode_Competiton extends LinearOpMode {
             @Override
             public void onError(int errorCode) {}
         });
+
+        //AprilTag Camera
+        MonkeyAprilTagCamera atcam = new MonkeyAprilTagCamera(hardwareMap, "AprilTagCamera", 10, 55);
 
 
         //wheel
@@ -133,6 +135,8 @@ public class DriveCode_Competiton extends LinearOpMode {
             //telemetry.addData("DistanceSensorInfo",distanceSensor.getDistance(DistanceUnit.MM));
             telemetry.addLine("In Standby");
 
+            telemetry.addData("encoder", wheel.wheelEncoder.getPosition());
+
             if (gamepad1.a) {
                 wheel.gen_servo1.servo.set(0.2);
                 wheel.gen_servo2.servo.set(0.2);
@@ -158,10 +162,41 @@ public class DriveCode_Competiton extends LinearOpMode {
             telemetry.addLine("In Run Loop");
             odo.update();
 
-            odoPose = odo.getPosition();//get xm y and heading in one step
+            //odoPose = odo.getPosition();//get xm y and heading in one step
 
-            chassis.setHeading(odoPose.getHeading(AngleUnit.RADIANS)); //Must call before DRIVE
-            chassis.DRIVE(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x, gamepad1.right_bumper);
+            if (gamepad1.y) {
+                telemetry.addLine("In Camera aim mode");
+
+                //we want to fine tune angles
+                List<AprilTagDetection> currentDetections = atcam.getDetections();
+                if (!currentDetections.isEmpty()) {
+                    for (AprilTagDetection detection : currentDetections) {
+                        if (detection.metadata != null) {
+                            if (detection.id == 20 || detection.id == 24  ) {
+                                telemetry.addData("detected:", detection.id);
+                                telemetry.addData("detection.ftcPose.yaw:", Math.toRadians(detection.ftcPose.yaw));
+                                telemetry.addData("detection.ftcPose.range:", detection.ftcPose.range);
+                                chassis.turnTowards(Math.toRadians(detection.ftcPose.yaw));
+                                launcher.setToDistance(detection.ftcPose.range);
+                                break;
+
+                            }
+                        }
+                    }
+                }
+
+
+            } else {
+                telemetry.addLine("In manual aim mode");
+                //telemetry.addData("Curheading", chassis.currentHeading);
+                launcher.manualControl();
+                chassis.setHeading(odo.getHeading()); //Must call before DRIVE
+                chassis.DRIVE(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x, gamepad1.right_bumper);
+                telemetry.addData("rotate", gamepad1.right_stick_x);
+                telemetry.addData("Curheading", chassis.currentHeading);
+                telemetry.addData("Target heading", chassis.targetHeading);
+                telemetry.addData("Delta norm",  Math.atan2(Math.sin(chassis.currentHeading - chassis.targetHeading), Math.cos(chassis.currentHeading - chassis.targetHeading)));
+            }
 
             if (gamepad1.x && !g1_x_flag) {
                 g1_x_flag = true;
@@ -187,12 +222,13 @@ public class DriveCode_Competiton extends LinearOpMode {
                 g2_x_flag = false;
             }
 
-            if (gamepad2.a && !g2_a_flag) {
+
+            if (gamepad2.y && !g2_y_flag) {
                 g2_a_flag = true;
                 //Action here
-                wheel.toggleWheelForward();
-            } else if (!gamepad2.a) {
-                g2_a_flag = false;
+                wheel.abandonOperation();
+            } else if (!gamepad2.y) {
+                g2_y_flag = false;
             }
 
             if (gamepad1.left_bumper) {
@@ -200,6 +236,13 @@ public class DriveCode_Competiton extends LinearOpMode {
                 intake.startHold();
             } else {
                 intake.stopHold();
+            }
+
+            if (gamepad1.right_bumper) {
+                //Action here
+                intake.startReverse();
+            } else {
+                intake.stopReverse();
             }
 
             if (gamepad2.dpad_right && !g2_right_flag) {
@@ -230,6 +273,8 @@ public class DriveCode_Competiton extends LinearOpMode {
             wheel.run();
             intake.run();
             launcher.run();
+
+            telemetry.addData( "amISorting", wheel.amISorting);
 
             telemetry.addData("ittr Raw", wheel.itr.states.toString());
             telemetry.addData("index", wheel.itr.cursor);

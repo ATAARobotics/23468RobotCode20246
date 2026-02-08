@@ -16,11 +16,17 @@ public class Wheel {
 
     public boolean CanTurn = true;
     public int encoderTargetPos = 0;
-    private int count = 0;
+    public int count = 0;
     private boolean isShooting = false;
 
-    public static int NOTCH = 2720;
-    public static int ERROR = 200;
+    public boolean amISorting = false;
+
+    public static int NOTCH = 2731;
+    public static int ERROR = 100;
+
+    public int stallCount = 0;
+    public int prevLoc = 0;
+    //
 
     public MonkeyCameraPipeline cameraPipeline;
 
@@ -76,7 +82,7 @@ public class Wheel {
 
         }
 
-        itr.next();
+        //itr.next();
         this.count = 99;
         this.encoderTargetPos += NOTCH * moveCount;
         this.CanTurn = false;
@@ -91,18 +97,29 @@ public class Wheel {
         }
     }
 
-    public void order() {
-        this.count = itr.getCount();
+    public void abandonOperation() {
         this.railServoLeft.setPosition(0.375);
         this.railServoRight.setPosition(0.625);
+        isShooting = false;
+        this.count = 99;
+    }
 
-        toggleWheelForwardForceCount(itr.getNumberOfRotatesToOrder());
+    public void order() {
+        if (!amISorting) {
+            amISorting = true;
+            this.count = itr.getCount();
+            this.railServoLeft.setPosition(0.375);
+            this.railServoRight.setPosition(0.625);
+
+            toggleWheelForwardForceCount(itr.getNumberOfRotatesToOrder());
+        }
+
 
     }
 
     public void shoot() {
-        this.railServoLeft.setPosition(0.5);//0.5
-        this.railServoRight.setPosition(0.5);
+        this.railServoLeft.setPosition(0.5+0.03);//0.5
+        this.railServoRight.setPosition(0.5-0.03);
         toggleWheelForwardForceCount(3);
         this.isShooting = true;
         itr.erase();
@@ -117,20 +134,23 @@ public class Wheel {
 
         if( complete ) {
             CanTurn = true;
+            amISorting = false;
             if ( cameraPipeline.detectedGreen() ){
                 itr.set(MonkeyTinyIterator.GREEN);
                 toggleWheelForward();
             } else if ( cameraPipeline.detectedPurp() ){
                 itr.set(MonkeyTinyIterator.PURPLE);
                 toggleWheelForward();
+            } else {
+                itr.set(MonkeyTinyIterator.NONE);
             }
 
 
             if(isShooting) {
                 isShooting = false;
                 count = 0;
-                railServoLeft.setPosition(0.375);
-                railServoRight.setPosition(0.625);
+                this.railServoLeft.setPosition(0.375);
+                this.railServoRight.setPosition(0.625);
             }
             gen_servo1.setTargetPosition(pos);
             gen_servo2.setTargetPosition(pos);
@@ -144,6 +164,10 @@ public class Wheel {
 
         gen_servo1.run(pos);
         gen_servo2.run(pos);
+    }
+
+    public boolean getSorting() {
+        return amISorting;
     }
 
 }

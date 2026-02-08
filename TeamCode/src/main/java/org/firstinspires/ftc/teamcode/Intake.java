@@ -5,7 +5,7 @@ import com.arcrobotics.ftclib.hardware.motors.CRServo;
 
 public class Intake {
 
-    public double POWER = 0.5;
+    public double POWER = 0.8;
 
     //vars: motors and var for current mode
     //public CRServo intakeMotor;
@@ -17,7 +17,7 @@ public class Intake {
     public CRServo innerMotorR;
 
     public int direction = 1;
-    public int isRunning = 0;
+    public int isRunningReverse = 0;
     public int isHold = 0;
 
     //public long runForIncrementStart;
@@ -37,7 +37,7 @@ public class Intake {
     }
 
 
-    public void toggleDirection() {
+    public void reverse() {
         // swap direction
         direction *= -1;
     }
@@ -47,9 +47,9 @@ public class Intake {
         this.direction = direction;
     }
 
-    public void start() {
+    public void startReverse() {
         //start the intake in the desired direction
-        isRunning = 1;
+        isRunningReverse = 1;
     }
 
     public void startHold() {
@@ -57,9 +57,9 @@ public class Intake {
         isHold = 1;
     }
 
-    public void stop() {
+    public void stopReverse() {
         //turn the intake off
-        isRunning = 0;
+        isRunningReverse = 0;
     }
 
     public void stopHold() {
@@ -68,10 +68,12 @@ public class Intake {
     }
 
     public void run() {
-        if (isRunning == 1 || isHold == 1) {
+        if (isHold == 1) {
             intakeMotor.set(POWER * direction * -1);
             //intakeMotor2.set(POWER * direction);
 
+        } else if (isRunningReverse == 1) {
+            intakeMotor.set(POWER * direction);
         } else {
             intakeMotor.set(0);
             //intakeMotor2.set(0);

@@ -81,7 +81,7 @@ public class MonkeyMotor extends Motor {
 
         //proportion=distance=error
         double test_auto = Math.min(
-                (coefficient_p_rot * 1 * error) + (coefficient_d_rot * 1.1 * (error - prevError))
+                (coefficient_p_rot * 1 * error) + (coefficient_d_rot * 1.2 * (error - prevError))
                 , 1);
         prevError = error;
 

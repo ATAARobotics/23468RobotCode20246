@@ -30,7 +30,7 @@ class GetThresholdsPipeline extends OpenCvPipeline {
     private boolean detectedGreen = false;
     private boolean detectedPurp = false;
 
-    Rect region = new Rect(400, 10, 200,  420);
+    Rect region = new Rect(325, 10, 200,  420);
 
     static final Scalar PURPLE = new Scalar(255, 0, 255);
     static final Scalar GREEN = new Scalar(0, 255, 0);
@@ -90,7 +90,7 @@ class GetThresholdsPipeline extends OpenCvPipeline {
             downsizedRegion.convertTo(downsizedRegion, -1, 1.0, -50);
             //Imgproc.medianBlur(downsizedRegion, downsizedRegion, 15);
             //Imgproc.putText(downsizedRegion, "", putText, Imgproc.FONT_HERSHEY_SIMPLEX, 1.0, WHITE ); // add a few pixels so OTSU uses a high threshold
-            Imgproc.threshold(downsizedRegion, downsizedRegion, 100, 255, Imgproc.THRESH_OTSU);
+            Imgproc.threshold(downsizedRegion, downsizedRegion, 80, 255, Imgproc.THRESH_OTSU);
             GREENTHESHOLD = (int) Core.mean(downsizedRegion).val[0];
             //Imgproc.threshold(downsizedRegion, downsizedRegion, 50, 255, Imgproc.THRESH_BINARY);
             Imgproc.putText(downsizedRegion, String.format("%2f", mm.maxVal ), putText, Imgproc.FONT_HERSHEY_SIMPLEX, 1.0, WHITE );
@@ -115,7 +115,7 @@ class GetThresholdsPipeline extends OpenCvPipeline {
 
             Core.subtract(regionToSamplea, regionToSampleb, downsizedRegion); //Really nice green
             downsizedRegion.convertTo(downsizedRegion, -1, 1.0, -50);
-            Imgproc.threshold(downsizedRegion, downsizedRegion, 100, 255, Imgproc.THRESH_OTSU);
+            Imgproc.threshold(downsizedRegion, downsizedRegion, 80, 255, Imgproc.THRESH_OTSU);
             tempval = Core.mean(downsizedRegion);
             Imgproc.putText(input, String.format("%2f", tempval.val[0] ), putText , Imgproc.FONT_HERSHEY_SIMPLEX, 1.0, GREEN );
 
