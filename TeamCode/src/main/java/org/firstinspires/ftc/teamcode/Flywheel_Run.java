@@ -29,6 +29,8 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import android.graphics.Color;
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
@@ -39,10 +41,14 @@ import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.Blinker;
+import com.qualcomm.robotcore.hardware.LightBlinker;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 
 /*
@@ -102,6 +108,11 @@ public class Flywheel_Run extends OpMode
             }
         }
 
+        ArrayList<Blinker.Step> color = new ArrayList<Blinker.Step>();
+        color.add(new Blinker.Step(0xff1000,1, TimeUnit.SECONDS));
+        color.add(new Blinker.Step(0xc500fc,1, TimeUnit.SECONDS));
+        ControlHub.setPattern(color);
+
         flywheel = new Flywheel_Config(ControlHub, hardwareMap, "flywheel");
         flywheel1 = new Flywheel_Config(ControlHub, hardwareMap, "flywheel1");
         Servo1=new CRServo(hardwareMap, "Servo1");
@@ -139,6 +150,8 @@ public class Flywheel_Run extends OpMode
         for (LynxModule hub : allHubs) {
             hub.clearBulkCache();
         }
+
+
 
         long curr_time = runtime.nanoseconds();
 

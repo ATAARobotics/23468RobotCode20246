@@ -131,23 +131,6 @@ public class Auto_FarRed extends LinearOpMode {
         //AprilTag Camera
         this.atcam = new MonkeyAprilTagCamera(hardwareMap, "AprilTagCamera", 10, 55);
 
-
-        //wheel
-        //Motor genevaEncoderMotor = new Motor(hardwareMap, "Geneva Encoder");
-        //CRServo genevaServo1 = new CRServo(hardwareMap, "Geneva Servo 1");
-        //CRServo genevaServo2 = new CRServo(hardwareMap, "Geneva Servo 2");
-        MonkeyPositionMotorv2 genevaMotor = new MonkeyPositionMotorv2(hardwareMap, "Geneva Motor");
-        Servo railServoLeft = hardwareMap.get(Servo.class, "Rail Servo L");
-        Servo railServoRight = hardwareMap.get(Servo.class, "Rail Servo R");
-        wheel = new Wheel( genevaMotor,
-                railServoLeft, railServoRight, cameraPipeline
-        );
-
-        //this is P top P mid, g bottom
-        wheel.itr.states = new ArrayList<>(Arrays.asList(MonkeyTinyIterator.GREEN, MonkeyTinyIterator.PURPLE, MonkeyTinyIterator.PURPLE));
-        wheel.railServoLeft.setPosition(0.375);
-        wheel.railServoRight.setPosition(0.625);
-
         //intake
         //CRServo intakeMotor = new CRServo(hardwareMap, "Intake Servo 1");
         //CRServo intakeMotor2 = new CRServo(hardwareMap, "Intake Servo 2");
@@ -157,6 +140,25 @@ public class Auto_FarRed extends LinearOpMode {
         intake = new Intake( intakeMotor,// intakeMotor2,
                 innerMotorL, innerMotorR
         );
+
+        //wheel
+        //Motor genevaEncoderMotor = new Motor(hardwareMap, "Geneva Encoder");
+        //CRServo genevaServo1 = new CRServo(hardwareMap, "Geneva Servo 1");
+        //CRServo genevaServo2 = new CRServo(hardwareMap, "Geneva Servo 2");
+        MonkeyPositionMotorv2 genevaMotor = new MonkeyPositionMotorv2(hardwareMap, "Geneva Motor");
+        Servo railServoLeft = hardwareMap.get(Servo.class, "Rail Servo L");
+        Servo railServoRight = hardwareMap.get(Servo.class, "Rail Servo R");
+        wheel = new Wheel( genevaMotor,
+                railServoLeft, railServoRight, cameraPipeline,
+                intake
+        );
+
+        //this is P top P mid, g bottom
+        wheel.itr.states = new ArrayList<>(Arrays.asList(MonkeyTinyIterator.GREEN, MonkeyTinyIterator.PURPLE, MonkeyTinyIterator.PURPLE));
+        wheel.railServoLeft.setPosition(0.375);
+        wheel.railServoRight.setPosition(0.625);
+
+
 
         allHubs = hardwareMap.getAll(LynxModule.class);
         for (LynxModule hub : allHubs) {

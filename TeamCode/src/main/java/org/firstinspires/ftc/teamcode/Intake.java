@@ -20,6 +20,8 @@ public class Intake {
     public int isRunningReverse = 0;
     public int isHold = 0;
 
+    public boolean innerServoON = false;
+
     //public long runForIncrementStart;
     //public boolean runForIncrement = false;
 
@@ -55,6 +57,7 @@ public class Intake {
     public void startHold() {
         //start the intake in the desired direction
         isHold = 1;
+        innerServoON();
     }
 
     public void stopReverse() {
@@ -65,6 +68,7 @@ public class Intake {
     public void stopHold() {
         //turn the intake off
         isHold = 0;
+        innerServoOFF();
     }
 
     public void run() {
@@ -79,8 +83,26 @@ public class Intake {
             //intakeMotor2.set(0);
         }
 
-        innerMotorL.set(POWER * direction * -1);
-        innerMotorR.set(POWER * direction);
+        if (innerServoON == true) {
+            innerMotorL.set(POWER * direction * -1);
+            innerMotorR.set(POWER * direction);
+
+        }
+        else {
+            innerMotorL.set(0);
+            innerMotorR.set(0);
+        }
+
+
+
+    }
+
+    public void innerServoON() {
+        innerServoON = true;
+
+    }
+    public void innerServoOFF() {
+        innerServoON = false;
 
     }
 

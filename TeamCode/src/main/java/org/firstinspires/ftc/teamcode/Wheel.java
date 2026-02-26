@@ -31,6 +31,7 @@ public class Wheel {
     //
 
     public MonkeyCameraPipeline cameraPipeline;
+    public Intake intake;
 
     public MonkeyTinyIterator itr = new MonkeyTinyIterator();
 
@@ -39,10 +40,12 @@ public class Wheel {
 
     public Wheel(MonkeyPositionMotorv2 gen_motor,
                  Servo railServoLeft, Servo railServoRight,
-                 MonkeyCameraPipeline cameraPipeline) {
+                 MonkeyCameraPipeline cameraPipeline,
+                 Intake intake) {
 
         // save motors, initialize to desired starting position
         this.gen_motor = gen_motor;
+        this.intake = intake;
 
         this.railServoLeft = railServoLeft;
         this.railServoRight = railServoRight;
@@ -103,6 +106,7 @@ public class Wheel {
 
     public void order() {
         if (!amISorting) {
+            intake.innerServoON();
             amISorting = true;
             this.gen_motor.setIsSorting(true);
             this.count = itr.getCount();
@@ -115,6 +119,7 @@ public class Wheel {
 
     public void orderWithPredefinedSet(ArrayList<Integer> translated) {
         if (!amISorting) {
+            intake.innerServoON();
             amISorting = true;
             this.gen_motor.setIsSorting(true);
             this.count = itr.getCount();
@@ -172,6 +177,7 @@ public class Wheel {
                 this.setRailsToInnerPos(false);
                 this.gen_motor.setIsSorting(false);
                 this.lastSortTime = System.currentTimeMillis();
+                intake.innerServoOFF();
             }
 
             if(isShooting) {

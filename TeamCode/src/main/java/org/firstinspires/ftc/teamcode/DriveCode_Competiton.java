@@ -111,17 +111,6 @@ public class DriveCode_Competiton extends LinearOpMode {
         //MonkeyAprilTagCamera atcam = new MonkeyAprilTagCamera(hardwareMap, "AprilTagCamera", 10, 55);
 
 
-        //wheel
-        //Motor genevaEncoderMotor = new Motor(hardwareMap, "Geneva Encoder");
-        //CRServo genevaServo1 = new CRServo(hardwareMap, "Geneva Servo 1");
-        //CRServo genevaServo2 = new CRServo(hardwareMap, "Geneva Servo 2");
-        MonkeyPositionMotorv2 genevaMotor = new MonkeyPositionMotorv2(hardwareMap, "Geneva Motor");
-        Servo railServoLeft = hardwareMap.get(Servo.class, "Rail Servo L");
-        Servo railServoRight = hardwareMap.get(Servo.class, "Rail Servo R");
-        wheel = new Wheel( genevaMotor,
-                railServoLeft, railServoRight, cameraPipeline
-        );
-
         //intake
         //CRServo intakeMotor = new CRServo(hardwareMap, "Intake Servo 1");
         //CRServo intakeMotor2 = new CRServo(hardwareMap, "Intake Servo 2");
@@ -131,6 +120,20 @@ public class DriveCode_Competiton extends LinearOpMode {
         intake = new Intake( intakeMotor,// intakeMotor2,
                 innerMotorL, innerMotorR
         );
+
+        //wheel
+        //Motor genevaEncoderMotor = new Motor(hardwareMap, "Geneva Encoder");
+        //CRServo genevaServo1 = new CRServo(hardwareMap, "Geneva Servo 1");
+        //CRServo genevaServo2 = new CRServo(hardwareMap, "Geneva Servo 2");
+        MonkeyPositionMotorv2 genevaMotor = new MonkeyPositionMotorv2(hardwareMap, "Geneva Motor");
+        Servo railServoLeft = hardwareMap.get(Servo.class, "Rail Servo L");
+        Servo railServoRight = hardwareMap.get(Servo.class, "Rail Servo R");
+        wheel = new Wheel( genevaMotor,
+                railServoLeft, railServoRight, cameraPipeline,
+                intake
+        );
+
+
 
         Servo rampServo = hardwareMap.get(Servo.class, "Ramp Servo");
         launcher = new Launcher(new MonkeyVelocityMotor(hardwareMap, "Launcher 1", ControlHub)
@@ -266,12 +269,15 @@ public class DriveCode_Competiton extends LinearOpMode {
                 g2_y_flag = false;
             }
 
-            if (gamepad1.left_bumper) {
+            if (gamepad1.left_bumper && !g1_lb_flag) {
                 //Action here
                 intake.startHold();
-            } else {
+                g1_lb_flag = true;
+            } else if (!gamepad1.left_bumper && g1_lb_flag){
                 intake.stopHold();
+                g1_lb_flag = false;
             }
+
 
             if (gamepad1.right_bumper) {
                 //Action here
