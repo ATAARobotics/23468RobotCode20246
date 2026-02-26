@@ -11,6 +11,8 @@ public class Wheel {
     public Servo railServoLeft;
     public Servo railServoRight;
 
+    public Launcher launcher;
+
 
     public boolean CanTurn = true;
     public int encoderTargetPos = 0;
@@ -41,7 +43,7 @@ public class Wheel {
     public Wheel(MonkeyPositionMotorv2 gen_motor,
                  Servo railServoLeft, Servo railServoRight,
                  MonkeyCameraPipeline cameraPipeline,
-                 Intake intake) {
+                 Intake intake, Launcher launcher) {
 
         // save motors, initialize to desired starting position
         this.gen_motor = gen_motor;
@@ -51,6 +53,8 @@ public class Wheel {
         this.railServoRight = railServoRight;
 
         this.cameraPipeline = cameraPipeline;
+
+        this.launcher = launcher;
 
     }
 
@@ -148,13 +152,13 @@ public class Wheel {
     public void run() {
 
         if (delayShoot) {
-            if(System.currentTimeMillis() - lastSortTime > 300 && !amISorting) {
+            if(System.currentTimeMillis() - lastSortTime > 400 && !amISorting && CanTurn) {
                 delayShoot = false;
                 shoot();
             }
         }
 
-        boolean complete = Math.abs(gen_motor.getCurrentPosition() - this.encoderTargetPos) < MonkeyPositionMotorv2.TOLERANCE; //THIS IS HERE BECAUSE THE MOTOR POSITION GETS SET AFTER THIS CALL SO .atTargetPosition DOES NOT WORK
+        boolean complete = Math.abs(gen_motor.getCurrentPosition() - this.encoderTargetPos) < MonkeyPositionMotorv2.TOLERANCE && (!CanTurn); //THIS IS HERE BECAUSE THE MOTOR POSITION GETS SET AFTER THIS CALL SO .atTargetPosition DOES NOT WORK
 
         if( complete ) {
             gen_motor.setTargetPosition(encoderTargetPos);
@@ -177,13 +181,15 @@ public class Wheel {
                 this.setRailsToInnerPos(false);
                 this.gen_motor.setIsSorting(false);
                 this.lastSortTime = System.currentTimeMillis();
-                intake.innerServoOFF();
-            }
-
-            if(isShooting) {
+                //intake.innerServoOFF();
+                //launcher.motor2.clearIdle();
+                //launcher.motor1.clearIdle();
+            } else if (isShooting) {
                 isShooting = false;
                 count = 0;
                 this.setRailsToInnerPos(true);
+                //launcher.motor2.setIdle();
+                //launcher.motor1.setIdle();
             }
 
 

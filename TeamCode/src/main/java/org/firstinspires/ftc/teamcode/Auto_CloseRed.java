@@ -113,6 +113,16 @@ public class Auto_CloseRed extends LinearOpMode {
         fr = new MonkeyMotor(hardwareMap, "fr");
         fl = new MonkeyMotor(hardwareMap, "fl");
 
+        allHubs = hardwareMap.getAll(LynxModule.class);
+        for (LynxModule hub : allHubs) {
+            //hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
+            if (hub.isParent()) {
+                ControlHub = hub;
+            } else {
+                ExpansionHub = hub;
+            }
+        }
+
         //Interior Camera
         WebcamName webcamName = hardwareMap.get(WebcamName.class, "ColorSensor");
         OpenCvWebcam frontCamera = OpenCvCameraFactory.getInstance().createWebcam(webcamName);
@@ -154,9 +164,15 @@ public class Auto_CloseRed extends LinearOpMode {
         MonkeyPositionMotorv2 genevaMotor = new MonkeyPositionMotorv2(hardwareMap, "Geneva Motor");
         Servo railServoLeft = hardwareMap.get(Servo.class, "Rail Servo L");
         Servo railServoRight = hardwareMap.get(Servo.class, "Rail Servo R");
+        Servo rampServo = hardwareMap.get(Servo.class, "Ramp Servo");
+        launcher = new Launcher(new MonkeyVelocityMotor(hardwareMap, "Launcher 1", ControlHub)
+                , new MonkeyVelocityMotor(hardwareMap, "Launcher 2", ControlHub)
+                , rampServo
+        );
+
         wheel = new Wheel( genevaMotor,
                 railServoLeft, railServoRight, cameraPipeline,
-                intake
+                intake, launcher
         );
 
 
@@ -167,21 +183,8 @@ public class Auto_CloseRed extends LinearOpMode {
 
 
 
-        allHubs = hardwareMap.getAll(LynxModule.class);
-        for (LynxModule hub : allHubs) {
-            //hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
-            if (hub.isParent()) {
-                ControlHub = hub;
-            } else {
-                ExpansionHub = hub;
-            }
-        }
 
-        Servo rampServo = hardwareMap.get(Servo.class, "Ramp Servo");
-        launcher = new Launcher(new MonkeyVelocityMotor(hardwareMap, "Launcher 1", ControlHub)
-                , new MonkeyVelocityMotor(hardwareMap, "Launcher 2", ControlHub)
-                , rampServo
-        );
+
 
         // odo
         odo = hardwareMap.get(GoBildaPinpointDriver.class,"Odometry I2C");
@@ -219,7 +222,7 @@ public class Auto_CloseRed extends LinearOpMode {
         addDriveToTargetAction(-240, 1120, 0.8);
         addDriveToTargetActionWithIntake(-700, 640, 0.3);
         //add_Sort();
-        addDriveToTargetActionWithIntakeAndSort(-160, 800, 0.8, new ArrayList<>(Arrays.asList(MonkeyTinyIterator.GREEN, MonkeyTinyIterator.PURPLE, MonkeyTinyIterator.PURPLE)));
+        addDriveToTargetActionWithIntakeAndSort(-0, 800, 0.8, new ArrayList<>(Arrays.asList(MonkeyTinyIterator.GREEN, MonkeyTinyIterator.PURPLE, MonkeyTinyIterator.PURPLE)));
         add_FaceAHeadingAction(-1.45, 0.7);
         //addwaitaction(0.500);
         addLaunch();
@@ -228,10 +231,11 @@ public class Auto_CloseRed extends LinearOpMode {
         addDriveToTargetActionWithIntake(-1255-6, 900+15, 0.3);
         addDriveToTargetActionWithIntake(-1025-6, 1180+15, 0.65);
         // add_Sort();
-        addDriveToTargetActionWithIntakeAndSort(-160,800,0.85, new ArrayList<>(Arrays.asList(MonkeyTinyIterator.PURPLE, MonkeyTinyIterator.GREEN, MonkeyTinyIterator.PURPLE)));
+        addDriveToTargetActionWithIntakeAndSort(-0,800,0.85, new ArrayList<>(Arrays.asList(MonkeyTinyIterator.PURPLE, MonkeyTinyIterator.GREEN, MonkeyTinyIterator.PURPLE)));
         add_FaceAHeadingAction(-1.45, 0.7);
         addLaunch();
         addDriveToTargetAction(-600,800,1);
+
 
 
 
@@ -270,6 +274,7 @@ public class Auto_CloseRed extends LinearOpMode {
             telemetry.addData("Y:", odo.getPosY());
             telemetry.addData("H:", odo.getHeading());
             telemetry.addData("wheel", wheel.itr.getCurrentContents());
+            telemetry.addData("wheelCount",wheel.count);
 
             telemetry.update();
             //wheelServo.run();
@@ -326,6 +331,7 @@ public class Auto_CloseRed extends LinearOpMode {
             telemetry.addData("CurrentTag", SaveData.detectedMotief);
             telemetry.addData("wheel index", wheel.itr.cursor);
             telemetry.addData("wheel content", wheel.itr.getCurrentContents());
+            telemetry.addData("wheelCount",wheel.count);
             telemetry.addData("X:", x);
             telemetry.addData("Y:", y);
             telemetry.addData("H:", h);

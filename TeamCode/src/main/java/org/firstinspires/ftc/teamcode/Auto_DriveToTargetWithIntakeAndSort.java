@@ -93,7 +93,7 @@ public class Auto_DriveToTargetWithIntakeAndSort extends State {
     @Override
     public void action(){
 
-        if (canSort && wheel.count == 3) {
+        if (canSort && wheel.count == 2) {
             canSort = false;
             wheel.orderWithPredefinedSet(translated);
         }

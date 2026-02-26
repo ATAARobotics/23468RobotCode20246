@@ -128,18 +128,22 @@ public class DriveCode_Competiton extends LinearOpMode {
         MonkeyPositionMotorv2 genevaMotor = new MonkeyPositionMotorv2(hardwareMap, "Geneva Motor");
         Servo railServoLeft = hardwareMap.get(Servo.class, "Rail Servo L");
         Servo railServoRight = hardwareMap.get(Servo.class, "Rail Servo R");
-        wheel = new Wheel( genevaMotor,
-                railServoLeft, railServoRight, cameraPipeline,
-                intake
-        );
-
-
 
         Servo rampServo = hardwareMap.get(Servo.class, "Ramp Servo");
         launcher = new Launcher(new MonkeyVelocityMotor(hardwareMap, "Launcher 1", ControlHub)
                 , new MonkeyVelocityMotor(hardwareMap, "Launcher 2", ControlHub)
                 , rampServo
         );
+
+        wheel = new Wheel( genevaMotor,
+                railServoLeft, railServoRight, cameraPipeline,
+                intake, launcher
+        );
+
+
+
+
+
 
         // odo
         odo = hardwareMap.get(GoBildaPinpointDriver.class,"Odometry I2C");

@@ -14,6 +14,7 @@ public class Auto_Launch extends State {
 
     int stallCount = 0;
     boolean canShoot = true;
+    boolean wheelShootPrev;
 
 
     public Auto_Launch(Wheel wheel) {
@@ -21,7 +22,7 @@ public class Auto_Launch extends State {
     }
 
     public boolean truefalse( ){
-        if ( (!wheel.isShooting && !canShoot) || stallCount > 5 ) {
+        if ( !canShoot && wheelShootPrev && !wheel.isShooting ) {
             return true;
         }
         return false;
@@ -33,6 +34,7 @@ public class Auto_Launch extends State {
             wheel.shootWithCooldown();//run once
             canShoot = false;
         }
+        wheelShootPrev = wheel.isShooting;
     }
 
 

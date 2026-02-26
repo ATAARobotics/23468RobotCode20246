@@ -83,15 +83,15 @@ public class Intake {
             //intakeMotor2.set(0);
         }
 
-        if (innerServoON == true) {
+        //if (innerServoON == true) {
             innerMotorL.set(POWER * direction * -1);
             innerMotorR.set(POWER * direction);
 
-        }
-        else {
-            innerMotorL.set(0);
-            innerMotorR.set(0);
-        }
+        //}
+        //else {
+        //    innerMotorL.set(0);
+        //    innerMotorR.set(0);
+        //}
 
 
 

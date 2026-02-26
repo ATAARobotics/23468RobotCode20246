@@ -109,6 +109,16 @@ public class Auto_FarBlue extends LinearOpMode {
         fr = new MonkeyMotor(hardwareMap, "fr");
         fl = new MonkeyMotor(hardwareMap, "fl");
 
+        allHubs = hardwareMap.getAll(LynxModule.class);
+        for (LynxModule hub : allHubs) {
+            //hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
+            if (hub.isParent()) {
+                ControlHub = hub;
+            } else {
+                ExpansionHub = hub;
+            }
+        }
+
         //Interior Camera
         WebcamName webcamName = hardwareMap.get(WebcamName.class, "ColorSensor");
         OpenCvWebcam frontCamera = OpenCvCameraFactory.getInstance().createWebcam(webcamName);
@@ -150,9 +160,15 @@ public class Auto_FarBlue extends LinearOpMode {
         MonkeyPositionMotorv2 genevaMotor = new MonkeyPositionMotorv2(hardwareMap, "Geneva Motor");
         Servo railServoLeft = hardwareMap.get(Servo.class, "Rail Servo L");
         Servo railServoRight = hardwareMap.get(Servo.class, "Rail Servo R");
+        Servo rampServo = hardwareMap.get(Servo.class, "Ramp Servo");
+        launcher = new Launcher(new MonkeyVelocityMotor(hardwareMap, "Launcher 1", ControlHub)
+                , new MonkeyVelocityMotor(hardwareMap, "Launcher 2", ControlHub)
+                , rampServo
+        );
+
         wheel = new Wheel( genevaMotor,
                 railServoLeft, railServoRight, cameraPipeline,
-                intake
+                intake, launcher
         );
 
         //this is P top P mid, g bottom
@@ -162,21 +178,7 @@ public class Auto_FarBlue extends LinearOpMode {
 
 
 
-        allHubs = hardwareMap.getAll(LynxModule.class);
-        for (LynxModule hub : allHubs) {
-            //hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
-            if (hub.isParent()) {
-                ControlHub = hub;
-            } else {
-                ExpansionHub = hub;
-            }
-        }
 
-        Servo rampServo = hardwareMap.get(Servo.class, "Ramp Servo");
-        launcher = new Launcher(new MonkeyVelocityMotor(hardwareMap, "Launcher 1", ControlHub)
-                , new MonkeyVelocityMotor(hardwareMap, "Launcher 2", ControlHub)
-                , rampServo
-        );
 
         // odo
         odo = hardwareMap.get(GoBildaPinpointDriver.class,"Odometry I2C");

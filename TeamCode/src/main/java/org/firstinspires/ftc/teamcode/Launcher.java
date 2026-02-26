@@ -22,9 +22,9 @@ public class Launcher {
     public int MID_SPEED = MID_60;
     public int FAST_SPEED = FAST_60;
     */
-    public int SLOW_SPEED = 3350;
-    public int MID_SPEED = 3800;
-    public int FAST_SPEED = 4200;
+    public int SLOW_SPEED = 2900;
+    public int MID_SPEED = 3350;
+    public int FAST_SPEED = 4150;
 
     public static int MODE_STOP = 0;
     //public static int MODE_IDLE = 1;
@@ -136,10 +136,13 @@ public class Launcher {
 
             if (mode == MODE_SLOW) {
                 target = SLOW_SPEED;
+                Servo60();
             } else if (mode == MODE_MID) {
                 target = MID_SPEED;
+                Servo60();
             } else if (mode == MODE_FAST) {
                 target = FAST_SPEED;
+                Servo45();
             } else {
                 target = 0;
             }
