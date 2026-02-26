@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.arcrobotics.ftclib.hardware.motors.Motor;
+import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -11,7 +11,6 @@ import com.arcrobotics.ftclib.hardware.motors.CRServo;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.WhiteBalanceControl;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
@@ -31,6 +30,10 @@ public class DriveCode_Competiton extends LinearOpMode {
     public Wheel wheel;
     public Intake intake;
     public Launcher launcher;
+
+    List<LynxModule> allHubs = null;
+    LynxModule ControlHub = null;
+    LynxModule ExpansionHub = null;
 
     //BUTTONS & CONTROLS GO HERE
     public float LeftStickUPDOWN;
@@ -66,6 +69,18 @@ public class DriveCode_Competiton extends LinearOpMode {
     @Override
     public void runOpMode() {
         //ROBOT SETUP CODE GOES HERE
+
+        allHubs = hardwareMap.getAll(LynxModule.class);
+        for (LynxModule hub : allHubs) {
+            //hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
+            if (hub.isParent()) {
+                ControlHub = hub;
+            } else {
+                ExpansionHub = hub;
+            }
+        }
+
+
         chassis = new Chassis( new MonkeyMotor(hardwareMap, "fr")
                 , new MonkeyMotor(hardwareMap, "fl")
                 , new MonkeyMotor(hardwareMap, "br")
@@ -93,18 +108,18 @@ public class DriveCode_Competiton extends LinearOpMode {
         });
 
         //AprilTag Camera
-        MonkeyAprilTagCamera atcam = new MonkeyAprilTagCamera(hardwareMap, "AprilTagCamera", 10, 55);
+        //MonkeyAprilTagCamera atcam = new MonkeyAprilTagCamera(hardwareMap, "AprilTagCamera", 10, 55);
 
 
         //wheel
-        Motor genevaEncoderMotor = new Motor(hardwareMap, "Geneva Encoder");
-        CRServo genevaServo1 = new CRServo(hardwareMap, "Geneva Servo 1");
-        CRServo genevaServo2 = new CRServo(hardwareMap, "Geneva Servo 2");
+        //Motor genevaEncoderMotor = new Motor(hardwareMap, "Geneva Encoder");
+        //CRServo genevaServo1 = new CRServo(hardwareMap, "Geneva Servo 1");
+        //CRServo genevaServo2 = new CRServo(hardwareMap, "Geneva Servo 2");
+        MonkeyPositionMotorv2 genevaMotor = new MonkeyPositionMotorv2(hardwareMap, "Geneva Motor");
         Servo railServoLeft = hardwareMap.get(Servo.class, "Rail Servo L");
         Servo railServoRight = hardwareMap.get(Servo.class, "Rail Servo R");
-        wheel = new Wheel( genevaServo1, genevaServo2,
-                railServoLeft, railServoRight,
-                genevaEncoderMotor.encoder, cameraPipeline
+        wheel = new Wheel( genevaMotor,
+                railServoLeft, railServoRight, cameraPipeline
         );
 
         //intake
@@ -117,8 +132,10 @@ public class DriveCode_Competiton extends LinearOpMode {
                 innerMotorL, innerMotorR
         );
 
-        launcher = new Launcher(new MonkeyVelocityMotor(hardwareMap, "Launcher 1")
-                , new MonkeyVelocityMotor(hardwareMap, "Launcher 2")
+        Servo rampServo = hardwareMap.get(Servo.class, "Ramp Servo");
+        launcher = new Launcher(new MonkeyVelocityMotor(hardwareMap, "Launcher 1", ControlHub)
+                , new MonkeyVelocityMotor(hardwareMap, "Launcher 2", ControlHub)
+                , rampServo
         );
 
         // odo
@@ -133,49 +150,62 @@ public class DriveCode_Competiton extends LinearOpMode {
 
             //DURING STANDBY LOOP
             //telemetry.addData("DistanceSensorInfo",distanceSensor.getDistance(DistanceUnit.MM));
-            telemetry.addLine("In Standby");
+            //telemetry.addLine("In Standby");
 
-            telemetry.addData("encoder", wheel.wheelEncoder.getPosition());
+            //telemetry.addData("encoder", wheel.wheelEncoder.getPosition());
 
             if (gamepad1.a) {
-                wheel.gen_servo1.servo.set(0.2);
-                wheel.gen_servo2.servo.set(0.2);
+                wheel.gen_motor.set(0.3);
+                //wheel.gen_servo1.servo.set(0.2);
+                //wheel.gen_servo2.servo.set(0.2);
             } else if (gamepad1.b) {
-                wheel.gen_servo1.servo.set(-0.2);
-                wheel.gen_servo2.servo.set(-0.2);
+                wheel.gen_motor.set(-0.3);
+                //wheel.gen_servo1.servo.set(-0.2);
+                //wheel.gen_servo2.servo.set(-0.2);
             } else {
-                wheel.gen_servo1.servo.set(0);
-                wheel.gen_servo2.servo.set(0);
+                wheel.gen_motor.set(0);
+                //wheel.gen_servo1.servo.set(0);
+                //wheel.gen_servo2.servo.set(0);
             }
 
+            telemetry.addData("Wheel Target", wheel.encoderTargetPos);
+            telemetry.addData("Wheel At Target", wheel.gen_motor.atTargetPosition());
+            telemetry.addData("Wheel Pos", wheel.gen_motor.getCurrentPosition());
+            telemetry.addData("Ramp Pos", rampServo.getPosition());
+            telemetry.addData("test m1", launcher.motor1.getVelocity());
+            telemetry.addData("test m2 ", launcher.motor2.getVelocity());
 
             telemetry.update();
 
         }
 
         waitForStart();
-        wheel.wheelEncoder.reset();
+        wheel.gen_motor.resetEncoder();
+        wheel.encoderTargetPos = 0;
         //launcher.setLauncherNotIdle();
         //launcher.setLauncherSlow();
 
+        wheel.setRailsToInnerPos(true);
+        launcher.Servo60();
+
         while (opModeIsActive()) {
-            telemetry.addLine("In Run Loop");
+            //telemetry.addLine("In Run Loop");
             odo.update();
 
             //odoPose = odo.getPosition();//get xm y and heading in one step
 
             if (gamepad1.y) {
-                telemetry.addLine("In Camera aim mode");
+                //telemetry.addLine("In Camera aim mode");
 
                 //we want to fine tune angles
-                List<AprilTagDetection> currentDetections = atcam.getDetections();
+                /*List<AprilTagDetection> currentDetections = atcam.getDetections();
                 if (!currentDetections.isEmpty()) {
                     for (AprilTagDetection detection : currentDetections) {
                         if (detection.metadata != null) {
                             if (detection.id == 20 || detection.id == 24  ) {
-                                telemetry.addData("detected:", detection.id);
-                                telemetry.addData("detection.ftcPose.yaw:", Math.toRadians(detection.ftcPose.yaw));
-                                telemetry.addData("detection.ftcPose.range:", detection.ftcPose.range);
+                                //telemetry.addData("detected:", detection.id);
+                                //telemetry.addData("detection.ftcPose.yaw:", Math.toRadians(detection.ftcPose.yaw));
+                               // telemetry.addData("detection.ftcPose.range:", detection.ftcPose.range);
                                 chassis.turnTowards(Math.toRadians(detection.ftcPose.yaw));
                                 launcher.setToDistance(detection.ftcPose.range);
                                 break;
@@ -184,18 +214,23 @@ public class DriveCode_Competiton extends LinearOpMode {
                         }
                     }
                 }
+                */
 
 
             } else {
-                telemetry.addLine("In manual aim mode");
+                //telemetry.addLine("In manual aim mode");
                 //telemetry.addData("Curheading", chassis.currentHeading);
                 launcher.manualControl();
-                chassis.setHeading(odo.getHeading()); //Must call before DRIVE
+
+                double heading = odo.getHeading();
+                chassis.setHeading(heading); //Must call before DRIVE
+
+
                 chassis.DRIVE(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x, gamepad1.right_bumper);
-                telemetry.addData("rotate", gamepad1.right_stick_x);
-                telemetry.addData("Curheading", chassis.currentHeading);
-                telemetry.addData("Target heading", chassis.targetHeading);
-                telemetry.addData("Delta norm",  Math.atan2(Math.sin(chassis.currentHeading - chassis.targetHeading), Math.cos(chassis.currentHeading - chassis.targetHeading)));
+                //telemetry.addData("rotate", gamepad1.right_stick_x);
+                //telemetry.addData("Curheading", chassis.currentHeading);
+               // telemetry.addData("Target heading", chassis.targetHeading);
+                //telemetry.addData("Delta norm",  Math.atan2(Math.sin(chassis.currentHeading - chassis.targetHeading), Math.cos(chassis.currentHeading - chassis.targetHeading)));
             }
 
             if (gamepad1.x && !g1_x_flag) {
@@ -209,7 +244,7 @@ public class DriveCode_Competiton extends LinearOpMode {
             if (gamepad2.right_bumper && !g2_rb_flag) {
                 g2_rb_flag = true;
                 //Action here
-                wheel.shoot();
+                wheel.shootWithCooldown();
             } else if (!gamepad2.right_bumper) {
                 g2_rb_flag = false;
             }
@@ -263,6 +298,39 @@ public class DriveCode_Competiton extends LinearOpMode {
                 g2_left_flag = false;
             }
 
+            if (gamepad2.dpad_up && !g2_up_flag) {
+                g2_up_flag = true;
+                //Action here
+                launcher.adjustLauncherFaster();
+            } else if (!gamepad2.dpad_up) {
+                g2_up_flag = false;
+            }
+
+            if (gamepad2.dpad_down && !g2_down_flag) {
+                g2_up_flag = true;
+                //Action here
+                launcher.adjustLauncherSlower();
+            } else if (!gamepad2.dpad_down) {
+                g2_down_flag = false;
+            }
+
+            /*
+            if (gamepad2.a && !g2_a_flag) {
+                g2_a_flag = true;
+                //Action here
+                launcher.Servo45();
+            } else if (!gamepad2.a) {
+                g2_a_flag = false;
+            }
+
+            if (gamepad2.b && !g2_b_flag) {
+                g2_b_flag = true;
+                //Action here
+                launcher.Servo60();
+            } else if (!gamepad2.b) {
+                g2_b_flag = false;
+            }
+            */
 
             //either controller can stop the launcher
             if (gamepad1.back || gamepad2.back ) {
@@ -276,16 +344,27 @@ public class DriveCode_Competiton extends LinearOpMode {
 
             telemetry.addData( "amISorting", wheel.amISorting);
 
-            telemetry.addData("ittr Raw", wheel.itr.states.toString());
-            telemetry.addData("index", wheel.itr.cursor);
-            telemetry.addData("Wheel Contents", wheel.itr.getCurrentContents().toString());
-            telemetry.addData("Wheel Target", wheel.encoderTargetPos);
-            telemetry.addData("Wheel Pos", wheel.wheelEncoder.getPosition());
-            telemetry.addData("delta", Math.abs(wheel.encoderTargetPos - wheel.wheelEncoder.getPosition()));
+            //telemetry.addData("ittr Raw", wheel.itr.states.toString());
+            //telemetry.addData("index", wheel.itr.cursor);
+            //telemetry.addData("Wheel Contents", wheel.itr.getCurrentContents().toString());
+            //telemetry.addData("Wheel Target", wheel.encoderTargetPos);
+            //telemetry.addData("Wheel At Target", wheel.gen_motor.atTargetPosition());
+            //telemetry.addData("Wheel Pos", wheel.gen_motor.getCurrentPosition());
+            //telemetry.addData("Wheel Stall Count", wheel.stallCount);
 
-            telemetry.addData("launch speed", launcher.getMode());
-            telemetry.addData("launch speed", (launcher.target + launcher.adjustment ));
-            telemetry.addData("launch speed", launcher.motor1.encoder.getRawVelocity() );
+            //telemetry.addData("p", wheel.gen_motor.getPositionCoefficient());
+            //telemetry.addData("delta", Math.abs(wheel.encoderTargetPos - wheel.wheelEncoder.getPosition()));
+
+            telemetry.addData("MODE", launcher.getMode());
+
+            telemetry.addData("TARGET:", (launcher.target + launcher.adjustment ));
+            telemetry.addData("ACTUAL SPEED:", launcher.motor1.motor.getVelocity( )  * 60 / 28 );// get rpm
+            telemetry.addLine();
+            telemetry.addData("launch base", (launcher.target ));
+            telemetry.addData("launch adjust", (launcher.adjustment ));
+
+
+            //telemetry.addData("ramp", launcher.rampServo.getPosition());
 
 
 

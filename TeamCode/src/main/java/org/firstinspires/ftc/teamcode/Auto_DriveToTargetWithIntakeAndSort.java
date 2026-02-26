@@ -5,6 +5,8 @@ import static java.lang.Math.pow;
 import static java.lang.Math.round;
 import static java.lang.Math.sqrt;
 
+import java.util.ArrayList;
+
 
 public class Auto_DriveToTargetWithIntakeAndSort extends State {
     public MonkeyMotor br;
@@ -28,7 +30,6 @@ public class Auto_DriveToTargetWithIntakeAndSort extends State {
     public double dy=0;
     public double totaldist = 0;
 
-    public int countsincestart = 0;
     public boolean canSort = true;
     public Wheel wheel;
 
@@ -42,9 +43,10 @@ public class Auto_DriveToTargetWithIntakeAndSort extends State {
     public double coefficient_d_rot = 0.93;
     public double prevError = 0.0;
 
+    public ArrayList<Integer> translated;
     public Intake intake;
 
-    public Auto_DriveToTargetWithIntakeAndSort(double targetx, double targety, double power, MonkeyMotor br, MonkeyMotor bl, MonkeyMotor fr, MonkeyMotor fl, Intake intake, Wheel wheel){
+    public Auto_DriveToTargetWithIntakeAndSort(double targetx, double targety, double power, MonkeyMotor br, MonkeyMotor bl, MonkeyMotor fr, MonkeyMotor fl, Intake intake, Wheel wheel, ArrayList<Integer> translated){
         this.br = br;
         this.bl = bl;
         this.fr = fr;
@@ -52,6 +54,7 @@ public class Auto_DriveToTargetWithIntakeAndSort extends State {
 
         this.wheel = wheel;
         this.intake = intake;
+        this.translated = translated;
 
         this.speed = power;
 
@@ -76,7 +79,7 @@ public class Auto_DriveToTargetWithIntakeAndSort extends State {
 
     @Override
     public boolean truefalse(){
-        if ( (abs(curx - targetx) < tolerance && abs(cury - targety) < tolerance) || stallcount > 4 ){
+        if ( ((abs(curx - targetx) < tolerance && abs(cury - targety) < tolerance) || stallcount > 4) && (!wheel.amISorting && canSort) ){
             bl.set(0);
             br.set(0);
             fl.set(0);
@@ -90,11 +93,10 @@ public class Auto_DriveToTargetWithIntakeAndSort extends State {
     @Override
     public void action(){
 
-        if (countsincestart >= 100 && canSort) {
+        if (canSort && wheel.count == 3) {
             canSort = false;
-            wheel.order();
+            wheel.orderWithPredefinedSet(translated);
         }
-        countsincestart += 1;
 
         dx = targetx - curx;
         dy = targety - cury;
@@ -117,7 +119,6 @@ public class Auto_DriveToTargetWithIntakeAndSort extends State {
                 , 1);
         prevError = error;
         double adjustment = test_auto * 0.4 ;
-
 
         double denominator = Math.max(Math.abs(ry) + Math.abs(rx), 1);
 

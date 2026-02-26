@@ -97,5 +97,51 @@ public class MonkeyTinyIterator {
         return 1;
     }
 
+    public int getNumberOfRotatesToOrderGivenASpecificSet(ArrayList<Integer> translated) {
+        //TODO: given the balls we have what order do we need?
+
+        //ArrayList<Integer> translated = new ArrayList<>(Arrays.asList( states.get(cursor),states.get((cursor+1) % 3),states.get((cursor+2) % 3)));
+
+        if ( translated.get(0) == NONE ) {
+            if ( translated.get(1) == NONE && translated.get(2) != NONE ) {
+                return 2;
+            } else {
+                return 0;
+            }
+        } else if (SaveData.detectedMotief == PPG) {
+            if (translated.get(0) == GREEN && translated.get(1) == PURPLE && translated.get(2) == PURPLE) {  return 0; }
+            else if (translated.get(0) == GREEN && translated.get(1) == GREEN && translated.get(2) == PURPLE) {  return 0; }
+            else if (translated.get(0) == GREEN && translated.get(1) == GREEN && translated.get(2) == GREEN) {  return 0; }
+            else if (translated.get(0) == PURPLE && translated.get(1) == GREEN && translated.get(2) == GREEN) {  return 1; }
+            else if (translated.get(0) == PURPLE && translated.get(1) == PURPLE && translated.get(2) == GREEN) {  return 1; }
+            else if (translated.get(0) == PURPLE && translated.get(1) == PURPLE && translated.get(2) == PURPLE) {  return 0; }
+            else if (translated.get(0) == PURPLE && translated.get(1) == GREEN && translated.get(2) == PURPLE) {  return 2; }
+            else if (translated.get(0) == GREEN && translated.get(1) == PURPLE && translated.get(2) == GREEN) {  return 0; }
+            else { return 1; }
+        } else if (SaveData.detectedMotief == GPP) {
+            if (translated.get(0) == GREEN && translated.get(1) == PURPLE && translated.get(2) == PURPLE) {  return 2; }
+            else if (translated.get(0) == GREEN && translated.get(1) == GREEN && translated.get(2) == PURPLE) {  return 1; }
+            else if (translated.get(0) == GREEN && translated.get(1) == GREEN && translated.get(2) == GREEN) {  return 0; }
+            else if (translated.get(0) == PURPLE && translated.get(1) == GREEN && translated.get(2) == GREEN) {  return 0; }
+            else if (translated.get(0) == PURPLE && translated.get(1) == PURPLE && translated.get(2) == GREEN) {  return 0; }
+            else if (translated.get(0) == PURPLE && translated.get(1) == PURPLE && translated.get(2) == PURPLE) {  return 0; }
+            else if (translated.get(0) == PURPLE && translated.get(1) == GREEN && translated.get(2) == PURPLE) {  return 1; }
+            else if (translated.get(0) == GREEN && translated.get(1) == PURPLE && translated.get(2) == GREEN) {  return 0; }
+            else { return 1; }
+        } else if (SaveData.detectedMotief == PGP) {
+            if (translated.get(0) == GREEN && translated.get(1) == PURPLE && translated.get(2) == PURPLE) {  return 1; }
+            else if (translated.get(0) == GREEN && translated.get(1) == GREEN && translated.get(2) == PURPLE) {  return 0; }
+            else if (translated.get(0) == GREEN && translated.get(1) == GREEN && translated.get(2) == GREEN) {  return 0; }
+            else if (translated.get(0) == PURPLE && translated.get(1) == GREEN && translated.get(2) == GREEN) {  return 0; }
+            else if (translated.get(0) == PURPLE && translated.get(1) == PURPLE && translated.get(2) == GREEN) {  return 2; }
+            else if (translated.get(0) == PURPLE && translated.get(1) == PURPLE && translated.get(2) == PURPLE) {  return 0; }
+            else if (translated.get(0) == PURPLE && translated.get(1) == GREEN && translated.get(2) == PURPLE) {  return 0; }
+            else if (translated.get(0) == GREEN && translated.get(1) == PURPLE && translated.get(2) == GREEN) {  return 1; }
+            else { return 1; }
+        }
+
+        return 1;
+    }
+
 
 }

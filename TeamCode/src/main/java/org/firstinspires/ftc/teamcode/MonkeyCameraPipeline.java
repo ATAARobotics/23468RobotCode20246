@@ -53,7 +53,7 @@ class MonkeyCameraPipeline extends OpenCvPipeline {
         if (System.currentTimeMillis() < nextTime) {
             return input; //limit framerate to save CPU time
         }
-        nextTime = System.currentTimeMillis() + 200;
+        nextTime = System.currentTimeMillis() + 41 ;
 
 
         regionMat = input.submat(region);
@@ -66,7 +66,7 @@ class MonkeyCameraPipeline extends OpenCvPipeline {
         //Green
         Core.subtract(regionToSamplea, regionToSampleb, downsizedRegion); //Really nice green
         downsizedRegion.convertTo(downsizedRegion, -1, 1.0, -50);
-        Imgproc.threshold(downsizedRegion, downsizedRegion, 80, 255, Imgproc.THRESH_OTSU);
+        Imgproc.threshold(downsizedRegion, downsizedRegion, 100, 255, Imgproc.THRESH_OTSU);
         tempval = Core.mean(downsizedRegion);
 
         if (tempval.val[0] > 40) {
@@ -80,7 +80,7 @@ class MonkeyCameraPipeline extends OpenCvPipeline {
         //Purp
         Core.subtract(regionToSampleb, regionToSamplea, downsizedRegion); //Meh Purple
         downsizedRegion.convertTo(downsizedRegion, -1, 2.0, 0);
-        Imgproc.threshold(downsizedRegion, downsizedRegion, 100, 255, Imgproc.THRESH_OTSU);
+        Imgproc.threshold(downsizedRegion, downsizedRegion, 120, 255, Imgproc.THRESH_OTSU);
         tempval = Core.mean(downsizedRegion);
 
         if (tempval.val[0] > 40) {

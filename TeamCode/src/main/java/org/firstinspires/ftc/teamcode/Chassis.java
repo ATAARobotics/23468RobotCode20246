@@ -70,7 +70,7 @@ public class Chassis {
 
         if (!turbo) {
             forwardStick = forwardStick / 1.2;
-            strafeStick = strafeStick * 1.1 / 1.2;
+            strafeStick = strafeStick * 1.2 / 1.2;
             rotateStick = rotateStick / 1.4;
         }
 

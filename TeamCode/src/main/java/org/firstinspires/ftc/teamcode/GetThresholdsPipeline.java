@@ -36,6 +36,7 @@ class GetThresholdsPipeline extends OpenCvPipeline {
     static final Scalar GREEN = new Scalar(0, 255, 0);
     static final Scalar GREY = new Scalar(40, 40, 40);
     static final Scalar WHITE = new Scalar(255);
+    static final Scalar GREY_Scalar = new Scalar(128);
 
     static final Point putText = new Point(5,20);
     static final Point putText_Lower = new Point(5,50);
@@ -93,8 +94,8 @@ class GetThresholdsPipeline extends OpenCvPipeline {
             Imgproc.threshold(downsizedRegion, downsizedRegion, 80, 255, Imgproc.THRESH_OTSU);
             GREENTHESHOLD = (int) Core.mean(downsizedRegion).val[0];
             //Imgproc.threshold(downsizedRegion, downsizedRegion, 50, 255, Imgproc.THRESH_BINARY);
-            Imgproc.putText(downsizedRegion, String.format("%2f", mm.maxVal ), putText, Imgproc.FONT_HERSHEY_SIMPLEX, 1.0, WHITE );
-            Imgproc.putText(downsizedRegion, String.format("%2d", GREENTHESHOLD ), putText_Lower, Imgproc.FONT_HERSHEY_SIMPLEX, 1.0, WHITE );
+            Imgproc.putText(downsizedRegion, String.format("%2f", mm.maxVal ), putText, Imgproc.FONT_HERSHEY_SIMPLEX, 1.0, GREY_Scalar );
+            Imgproc.putText(downsizedRegion, String.format("%2d", GREENTHESHOLD ), putText_Lower, Imgproc.FONT_HERSHEY_SIMPLEX, 1.0, GREY_Scalar );
             return downsizedRegion;
         }
         else if (mode == 1) {
@@ -103,11 +104,11 @@ class GetThresholdsPipeline extends OpenCvPipeline {
             downsizedRegion.convertTo(downsizedRegion, -1, 2.0, 0);
             //Imgproc.medianBlur(downsizedRegion, downsizedRegion, 15);
 
-            Imgproc.threshold(downsizedRegion, downsizedRegion, 100, 255, Imgproc.THRESH_OTSU);
+            Imgproc.threshold(downsizedRegion, downsizedRegion, 120, 255, Imgproc.THRESH_OTSU);
             PURPLETHRESHOLD = (int) Core.mean(downsizedRegion).val[0];
-            Imgproc.putText(downsizedRegion, String.format("%2f", mm.maxVal ), putText, Imgproc.FONT_HERSHEY_SIMPLEX, 1.0, WHITE );
+            Imgproc.putText(downsizedRegion, String.format("%2f", mm.maxVal ), putText, Imgproc.FONT_HERSHEY_SIMPLEX, 1.0, GREY_Scalar );
 
-            Imgproc.putText(downsizedRegion, String.format("%2d", PURPLETHRESHOLD ), putText_Lower , Imgproc.FONT_HERSHEY_SIMPLEX, 1.0, WHITE );
+            Imgproc.putText(downsizedRegion, String.format("%2d", PURPLETHRESHOLD ), putText_Lower , Imgproc.FONT_HERSHEY_SIMPLEX, 1.0, GREY_Scalar );
 
             return downsizedRegion;
         }
@@ -129,7 +130,7 @@ class GetThresholdsPipeline extends OpenCvPipeline {
 
             Core.subtract(regionToSampleb, regionToSamplea, downsizedRegion); //Meh Purple
             downsizedRegion.convertTo(downsizedRegion, -1, 2.0, 0);
-            Imgproc.threshold(downsizedRegion, downsizedRegion, 100, 255, Imgproc.THRESH_OTSU);
+            Imgproc.threshold(downsizedRegion, downsizedRegion, 120, 255, Imgproc.THRESH_OTSU);
             tempval = Core.mean(downsizedRegion);
             Imgproc.putText(input, String.format("%2f", tempval.val[0] ), putText_Lower , Imgproc.FONT_HERSHEY_SIMPLEX, 1.0, PURPLE );
 

@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.arcrobotics.ftclib.hardware.motors.CRServo;
-import com.arcrobotics.ftclib.hardware.motors.Motor;
+import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -18,6 +18,7 @@ import org.openftc.easyopencv.OpenCvWebcam;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Autonomous(name = "Auto_CloseBlue", group = "Concept")
@@ -32,6 +33,10 @@ public class Auto_CloseBlue extends LinearOpMode {
     public MonkeyMotor bl;
     public MonkeyMotor fr;
     public MonkeyMotor fl;
+
+    List<LynxModule> allHubs = null;
+    LynxModule ControlHub = null;
+    LynxModule ExpansionHub = null;
 
     public Wheel wheel;
     public Intake intake;
@@ -59,8 +64,8 @@ public class Auto_CloseBlue extends LinearOpMode {
         Auto_DriveToTargetWithIntake a = new Auto_DriveToTargetWithIntake( targetx, targety, power, this.br, this.bl, this.fr, this.fl, this.intake);
         this.QueLinkList.add(a);
     }
-    public void addDriveToTargetActionWithIntakeAndSort(double targetx, double targety, double power) {
-        Auto_DriveToTargetWithIntakeAndSort a = new Auto_DriveToTargetWithIntakeAndSort( targetx, targety, power, this.br, this.bl, this.fr, this.fl, this.intake, this.wheel);
+    public void addDriveToTargetActionWithIntakeAndSort(double targetx, double targety, double power, ArrayList<Integer> translated) {
+        Auto_DriveToTargetWithIntakeAndSort a = new Auto_DriveToTargetWithIntakeAndSort( targetx, targety, power, this.br, this.bl, this.fr, this.fl, this.intake, this.wheel, translated);
         this.QueLinkList.add(a);
     }
 
@@ -79,10 +84,11 @@ public class Auto_CloseBlue extends LinearOpMode {
         this.QueLinkList.add(a);
     }
 
-    public void add_Sort() {
-        Auto_Sort a = new Auto_Sort( wheel );
+    public void add_Sort(ArrayList<Integer> content) {
+        Auto_Sort a = new Auto_Sort( wheel, content);
         this.QueLinkList.add(a);
     }
+
     public void add_getAprilTags() {
         Auto_GetAprilTag a = new Auto_GetAprilTag( this.atcam );
         this.QueLinkList.add(a);
@@ -132,18 +138,20 @@ public class Auto_CloseBlue extends LinearOpMode {
 
 
         //wheel
-        Motor genevaEncoderMotor = new Motor(hardwareMap, "Geneva Encoder");
-        CRServo genevaServo1 = new CRServo(hardwareMap, "Geneva Servo 1");
-        CRServo genevaServo2 = new CRServo(hardwareMap, "Geneva Servo 2");
+        //Motor genevaEncoderMotor = new Motor(hardwareMap, "Geneva Encoder");
+        //CRServo genevaServo1 = new CRServo(hardwareMap, "Geneva Servo 1");
+        //CRServo genevaServo2 = new CRServo(hardwareMap, "Geneva Servo 2");
+        MonkeyPositionMotorv2 genevaMotor = new MonkeyPositionMotorv2(hardwareMap, "Geneva Motor");
         Servo railServoLeft = hardwareMap.get(Servo.class, "Rail Servo L");
         Servo railServoRight = hardwareMap.get(Servo.class, "Rail Servo R");
-        wheel = new Wheel( genevaServo1, genevaServo2,
-                railServoLeft, railServoRight,
-                genevaEncoderMotor.encoder, cameraPipeline
+        wheel = new Wheel( genevaMotor,
+                railServoLeft, railServoRight, cameraPipeline
         );
 
         //this is P top P mid, g bottom
         wheel.itr.states = new ArrayList<>(Arrays.asList(MonkeyTinyIterator.GREEN, MonkeyTinyIterator.PURPLE, MonkeyTinyIterator.PURPLE));
+        wheel.railServoLeft.setPosition(0.375);
+        wheel.railServoRight.setPosition(0.625);
 
         //intake
         //CRServo intakeMotor = new CRServo(hardwareMap, "Intake Servo 1");
@@ -155,8 +163,20 @@ public class Auto_CloseBlue extends LinearOpMode {
                 innerMotorL, innerMotorR
         );
 
-        launcher = new Launcher(new MonkeyVelocityMotor(hardwareMap, "Launcher 1")
-                , new MonkeyVelocityMotor(hardwareMap, "Launcher 2")
+        allHubs = hardwareMap.getAll(LynxModule.class);
+        for (LynxModule hub : allHubs) {
+            //hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
+            if (hub.isParent()) {
+                ControlHub = hub;
+            } else {
+                ExpansionHub = hub;
+            }
+        }
+
+        Servo rampServo = hardwareMap.get(Servo.class, "Ramp Servo");
+        launcher = new Launcher(new MonkeyVelocityMotor(hardwareMap, "Launcher 1", ControlHub)
+                , new MonkeyVelocityMotor(hardwareMap, "Launcher 2", ControlHub)
+                , rampServo
         );
 
         // odo
@@ -187,7 +207,7 @@ public class Auto_CloseBlue extends LinearOpMode {
         addSetLaunchSpeed(Launcher.MODE_SLOW);
         addDriveToTargetAction(0, -800, 0.75);
         add_getAprilTags();
-        add_Sort();
+        add_Sort(new ArrayList<>(Arrays.asList(MonkeyTinyIterator.GREEN, MonkeyTinyIterator.PURPLE, MonkeyTinyIterator.PURPLE)));
         add_FaceAHeadingAction(1.4, 0.7);
         addwaitaction(750);
         addLaunch();
@@ -195,7 +215,7 @@ public class Auto_CloseBlue extends LinearOpMode {
         addDriveToTargetAction(-240, -1120, 0.8);
         addDriveToTargetActionWithIntake(-700, -640, 0.3);
         //add_Sort();
-        addDriveToTargetActionWithIntakeAndSort(-170, -800, 0.8);
+        addDriveToTargetActionWithIntakeAndSort(-160, -800, 0.8, new ArrayList<>(Arrays.asList(MonkeyTinyIterator.GREEN, MonkeyTinyIterator.PURPLE, MonkeyTinyIterator.PURPLE)));
         add_FaceAHeadingAction(Math.PI/2, 0.7);
         //addwaitaction(0.500);
         addLaunch();
@@ -204,7 +224,7 @@ public class Auto_CloseBlue extends LinearOpMode {
         addDriveToTargetActionWithIntake(-1255-6, -900-15, 0.3);
         addDriveToTargetActionWithIntake(-1025-6, -1180-15, 0.65);
         // add_Sort();
-        addDriveToTargetActionWithIntakeAndSort(-170,-800,0.85);
+        addDriveToTargetActionWithIntakeAndSort(-160,-800,0.85, new ArrayList<>(Arrays.asList(MonkeyTinyIterator.PURPLE, MonkeyTinyIterator.GREEN, MonkeyTinyIterator.PURPLE)));
         add_FaceAHeadingAction(Math.PI/2, 0.7);
         addLaunch();
         addDriveToTargetAction(-600,-800,1);
@@ -227,14 +247,14 @@ public class Auto_CloseBlue extends LinearOpMode {
             wheel.count = 3;
 
             if (gamepad1.a) {
-                wheel.gen_servo1.servo.set(0.2);
-                wheel.gen_servo2.servo.set(0.2);
+                //wheel.gen_servo1.servo.set(0.2);
+                //wheel.gen_servo2.servo.set(0.2);
             } else if (gamepad1.b) {
-                wheel.gen_servo1.servo.set(-0.2);
-                wheel.gen_servo2.servo.set(-0.2);
+                //wheel.gen_servo1.servo.set(-0.2);
+                //wheel.gen_servo2.servo.set(-0.2);
             } else {
-                wheel.gen_servo1.servo.set(0);
-                wheel.gen_servo2.servo.set(0);
+                //wheel.gen_servo1.servo.set(0);
+                //wheel.gen_servo2.servo.set(0);
             }
 
             telemetry.addData("fr", fr.getCurrentPosition());

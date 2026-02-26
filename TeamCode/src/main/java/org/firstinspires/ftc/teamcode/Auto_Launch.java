@@ -12,32 +12,27 @@ public class Auto_Launch extends State {
     Wheel wheel;
     Intake intake;
 
-    int prevError = 0;
     int stallCount = 0;
+    boolean canShoot = true;
+
 
     public Auto_Launch(Wheel wheel) {
         this.wheel = wheel;
     }
 
-    public boolean truefalse(){
-        int error = Math.abs(wheel.encoderTargetPos - wheel.wheelEncoder.getPosition());
-        if (error == prevError) {
-            stallCount++;
-        } else {
-            stallCount = 0;
-        }
-        prevError = error;
-;
-        if ( error < Wheel.ERROR || stallCount > 5 ) {
+    public boolean truefalse( ){
+        if ( (!wheel.isShooting && !canShoot) || stallCount > 5 ) {
             return true;
         }
         return false;
     }
 
-    public void initializeState(double targetH) {
-        this.targetH = targetH;
-        wheel.shoot();//run once
-
+    @Override
+    public void action() {
+        if (canShoot && !wheel.amISorting) {
+            wheel.shootWithCooldown();//run once
+            canShoot = false;
+        }
     }
 
 

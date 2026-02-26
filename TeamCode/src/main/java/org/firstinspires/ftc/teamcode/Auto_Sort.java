@@ -1,15 +1,18 @@
 package org.firstinspires.ftc.teamcode;
 
 
+import java.util.ArrayList;
+
 public class Auto_Sort extends State {
 
     Wheel wheel;
+    ArrayList<Integer> translated;
 
-    int prevError = 0;
-    int stallCount = 0;
+    boolean canSort = true;
 
-    public Auto_Sort(Wheel wheel) {
+    public Auto_Sort(Wheel wheel, ArrayList<Integer> translated) {
         this.wheel = wheel;
+        this.translated = translated;
     }
 
     public boolean truefalse(){
@@ -18,7 +21,9 @@ public class Auto_Sort extends State {
 
     public void initializeState(double targetH) {
         this.targetH = targetH;
-        wheel.order();//run once
+        wheel.itr.cursor = 0;
+        wheel.orderWithPredefinedSet(translated);//run once
+
 
     }
 
