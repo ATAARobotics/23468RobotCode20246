@@ -108,7 +108,7 @@ public class DriveCode_Competiton extends LinearOpMode {
         });
 
         //AprilTag Camera
-        //MonkeyAprilTagCamera atcam = new MonkeyAprilTagCamera(hardwareMap, "AprilTagCamera", 10, 55);
+        MonkeyAprilTagCamera atcam = new MonkeyAprilTagCamera(hardwareMap, "AprilTagCamera", 10, 55);
 
 
         //intake
@@ -139,8 +139,6 @@ public class DriveCode_Competiton extends LinearOpMode {
                 railServoLeft, railServoRight, cameraPipeline,
                 intake, launcher
         );
-
-
 
 
 
@@ -203,25 +201,31 @@ public class DriveCode_Competiton extends LinearOpMode {
 
             if (gamepad1.y) {
                 //telemetry.addLine("In Camera aim mode");
-
+                boolean ctag = false;
                 //we want to fine tune angles
-                /*List<AprilTagDetection> currentDetections = atcam.getDetections();
+                List<AprilTagDetection> currentDetections = atcam.getDetections();
                 if (!currentDetections.isEmpty()) {
                     for (AprilTagDetection detection : currentDetections) {
                         if (detection.metadata != null) {
                             if (detection.id == 20 || detection.id == 24  ) {
-                                //telemetry.addData("detected:", detection.id);
-                                //telemetry.addData("detection.ftcPose.yaw:", Math.toRadians(detection.ftcPose.yaw));
-                               // telemetry.addData("detection.ftcPose.range:", detection.ftcPose.range);
-                                chassis.turnTowards(Math.toRadians(detection.ftcPose.yaw));
-                                launcher.setToDistance(detection.ftcPose.range);
+                                telemetry.addLine(String.format("\n==== (ID %d) %s", detection.id, detection.metadata.name));
+                                telemetry.addLine(String.format("XYZ %6.1f %6.1f %6.1f  (inch)", detection.ftcPose.x, detection.ftcPose.y, detection.ftcPose.z));
+                                telemetry.addLine(String.format("PRY %6.1f %6.1f %6.1f  (deg)", detection.ftcPose.pitch, detection.ftcPose.roll, detection.ftcPose.yaw));
+                                telemetry.addLine(String.format("RBE %6.1f %6.1f %6.1f  (inch, deg, deg)", detection.ftcPose.range, detection.ftcPose.bearing, detection.ftcPose.elevation));
+                                telemetry.addData("delta", Math.atan2(Math.sin(chassis.currentHeading - detection.ftcPose.bearing), Math.cos(chassis.currentHeading - detection.ftcPose.bearing)));
+                                //chassis.turnTowards(Math.toRadians(detection.ftcPose.bearing));
+
+                                ctag = true;
+                                //launcher.setToDistance(detection.ftcPose.range);
                                 break;
 
                             }
                         }
                     }
                 }
-                */
+                if ( !ctag) {
+                    chassis.stop();
+                }
 
 
             } else {
@@ -246,6 +250,12 @@ public class DriveCode_Competiton extends LinearOpMode {
                 wheel.toggleWheelForwardForce();
             } else if (!gamepad1.x) {
                 g1_x_flag = false;
+            }
+
+
+
+            if (gamepad1.right_bumper && !g1_x_flag) {
+                g1_x_flag =
             }
 
             if (gamepad2.right_bumper && !g2_rb_flag) {
@@ -288,6 +298,14 @@ public class DriveCode_Competiton extends LinearOpMode {
                 intake.startReverse();
             } else {
                 intake.stopReverse();
+            }
+
+            if (gamepad1.a) {
+                wheel.encoderTargetPos += 5;
+            }
+
+            if (gamepad1.b) {
+                wheel.encoderTargetPos -= 5;
             }
 
             if (gamepad2.dpad_right && !g2_right_flag) {

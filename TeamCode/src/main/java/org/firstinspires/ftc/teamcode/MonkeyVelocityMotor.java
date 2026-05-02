@@ -18,9 +18,9 @@ public class MonkeyVelocityMotor {
     public double velocity;
     public boolean idle;
 
-    public static double friction = 0.05;
+    public static double friction = 0;
     public int target_rpm = 0;
-    public static double Kp = 0.13;
+    public static double Kp = 0.001;
     public static double TOLERANCE = 100;
     public static double MAX_VOLTAGE = 13;
     public static int IDLE_RPM = 2455;
@@ -66,7 +66,7 @@ public class MonkeyVelocityMotor {
 
         //feedforward = 0;
         error = target_rpm - rpm;
-        expected_voltage = MAX_VOLTAGE *  rpm / 5800;
+        expected_voltage = MAX_VOLTAGE *  target_rpm / 5800;
 
         // 13 is "Absolute max" voltage
         double voltage = Math.min(feedforward + expected_voltage + friction + Kp * error, MAX_VOLTAGE);

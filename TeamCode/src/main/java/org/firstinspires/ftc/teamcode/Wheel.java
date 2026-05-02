@@ -140,10 +140,11 @@ public class Wheel {
         toggleWheelForwardForceCount(3);
         this.isShooting = true;
         itr.erase();
+        gen_motor.setIsShooting(true);
     }
 
     public void shootWithCooldown() {
-        setRailsToInnerPos(false);
+        //setRailsToInnerPos(false);
         this.isShooting = true;
         this.delayShoot = true;
     }
@@ -158,7 +159,7 @@ public class Wheel {
             }
         }
 
-        boolean complete = Math.abs(gen_motor.getCurrentPosition() - this.encoderTargetPos) < MonkeyPositionMotorv2.TOLERANCE && (!CanTurn); //THIS IS HERE BECAUSE THE MOTOR POSITION GETS SET AFTER THIS CALL SO .atTargetPosition DOES NOT WORK
+        boolean complete = Math.abs(gen_motor.getCurrentPosition() - this.encoderTargetPos) < MonkeyPositionMotorv2.TOLERANCE; //&& (!CanTurn); //THIS IS HERE BECAUSE THE MOTOR POSITION GETS SET AFTER THIS CALL SO .atTargetPosition DOES NOT WORK
 
         if( complete ) {
             gen_motor.setTargetPosition(encoderTargetPos);
@@ -190,6 +191,7 @@ public class Wheel {
                 this.setRailsToInnerPos(true);
                 //launcher.motor2.setIdle();
                 //launcher.motor1.setIdle();
+                gen_motor.setIsShooting(false);
             }
 
 

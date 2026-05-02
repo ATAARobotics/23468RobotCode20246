@@ -31,9 +31,7 @@ package org.firstinspires.ftc.teamcode;
 
 import android.graphics.Color;
 
-import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+
 import com.arcrobotics.ftclib.hardware.motors.CRServo;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.Motor.Encoder;
@@ -67,7 +65,7 @@ import java.util.concurrent.TimeUnit;
 
 @TeleOp(name="Flywheel_Run", group="Iterative OpMode")
 @Disabled
-@Config
+
 public class Flywheel_Run extends OpMode
 {
     // Declare OpMode members.
@@ -96,7 +94,6 @@ public class Flywheel_Run extends OpMode
      */
     @Override
     public void init() {
-        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         allHubs = hardwareMap.getAll(LynxModule.class);
         for (LynxModule hub : allHubs) {

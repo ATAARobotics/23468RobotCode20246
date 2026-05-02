@@ -212,28 +212,33 @@ public class Auto_CloseRed extends LinearOpMode {
         */
 
         addSetLaunchSpeed(Launcher.MODE_SLOW);
-        addDriveToTargetAction(0, 800, 0.75);
+        addDriveToTargetAction(0, 800, 0.8);
         add_getAprilTags();
         add_Sort(new ArrayList<>(Arrays.asList(MonkeyTinyIterator.GREEN, MonkeyTinyIterator.PURPLE, MonkeyTinyIterator.PURPLE)));
         add_FaceAHeadingAction(-1.4, 0.7);
-        addwaitaction(750);
+        addwaitaction(1500);
         addLaunch();
+        addwaitaction(200);
         add_FaceAHeadingAction(-3*Math.PI/4, 0.75);
         addDriveToTargetAction(-240, 1120, 0.8);
-        addDriveToTargetActionWithIntake(-700, 640, 0.3);
+        addDriveToTargetActionWithIntake(-720, 660, 0.25);
         //add_Sort();
-        addDriveToTargetActionWithIntakeAndSort(-0, 800, 0.8, new ArrayList<>(Arrays.asList(MonkeyTinyIterator.GREEN, MonkeyTinyIterator.PURPLE, MonkeyTinyIterator.PURPLE)));
+        addwaitaction(700);
+        addDriveToTargetActionWithIntakeAndSort(-100, 710, 0.8, new ArrayList<>(Arrays.asList(MonkeyTinyIterator.GREEN, MonkeyTinyIterator.PURPLE, MonkeyTinyIterator.PURPLE)));
         add_FaceAHeadingAction(-1.45, 0.7);
         //addwaitaction(0.500);
         addLaunch();
+        addwaitaction(200);
         add_FaceAHeadingAction(-3*Math.PI/4, 0.75);
         addDriveToTargetAction(-650-6, 1530+15, 0.9);
-        addDriveToTargetActionWithIntake(-1255-6, 900+15, 0.3);
+        addDriveToTargetActionWithIntake(-1255-36, 900+45, 0.25);
         addDriveToTargetActionWithIntake(-1025-6, 1180+15, 0.65);
+        addwaitaction(700);
         // add_Sort();
-        addDriveToTargetActionWithIntakeAndSort(-0,800,0.85, new ArrayList<>(Arrays.asList(MonkeyTinyIterator.PURPLE, MonkeyTinyIterator.GREEN, MonkeyTinyIterator.PURPLE)));
+        addDriveToTargetActionWithIntakeAndSort(-100,710,0.85, new ArrayList<>(Arrays.asList(MonkeyTinyIterator.PURPLE, MonkeyTinyIterator.GREEN, MonkeyTinyIterator.PURPLE)));
         add_FaceAHeadingAction(-1.45, 0.7);
         addLaunch();
+        addwaitaction(200);
         addDriveToTargetAction(-600,800,1);
 
 

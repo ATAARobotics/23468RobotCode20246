@@ -190,27 +190,40 @@ public class Auto_FarBlue extends LinearOpMode {
         addSetLaunchSpeed(Launcher.MODE_FAST);
         addwaitaction(1000);
         add_getAprilTags();
-        addwaitaction(1000);
+        // addwaitaction(1000);
         add_Sort(new ArrayList<>(Arrays.asList(MonkeyTinyIterator.GREEN, MonkeyTinyIterator.PURPLE, MonkeyTinyIterator.PURPLE)));
         addDriveToTargetAction(100, 0, 0.6);
-        addwaitaction(5000);
-        add_FaceAHeadingAction(0.45, 0.7);
+        addwaitaction(4000);
+        add_FaceAHeadingAction(0.445, 0.7);
 
         addLaunch();
         addwaitaction(200);
         add_FaceAHeadingAction(Math.PI/2, 0.75);
-        addDriveToTargetAction(600, 100,0.75);
+        addDriveToTargetAction(680, 100,0.75);
 
-        addDriveToTargetActionWithIntake(580, 1400, 0.3);
+        addDriveToTargetActionWithIntake(680, 1400, 0.25);
+        addwaitaction(300);
 
 
-        addDriveToTargetActionWithIntake(100, 100, 0.7);
+        addDriveToTargetActionWithIntake(200, 100, 0.7);
         add_Sort(new ArrayList<>(Arrays.asList(MonkeyTinyIterator.GREEN, MonkeyTinyIterator.PURPLE, MonkeyTinyIterator.PURPLE)));
-        add_FaceAHeadingAction(0.46, 0.7);
-        addwaitaction(2000);
+        add_FaceAHeadingAction(0.43, 0.7);
+        addwaitaction(200);
         addLaunch();
         addwaitaction(200);
 
+        /*add_FaceAHeadingAction(Math.PI/2 + Math.PI/3, 0.75);
+        addDriveToTargetAction(600,1000, 0.75);
+        addDriveToTargetActionWithIntake(0,1200, 0.25);
+        addwaitaction(200);
+
+        addDriveToTargetAction(200,0, 0.7);
+
+        add_FaceAHeadingAction(0.43, 0.7);
+
+        addLaunch();
+        addwaitaction(200);
+        */
         addDriveToTargetAction(600, 0, 0.8);
 
         /*

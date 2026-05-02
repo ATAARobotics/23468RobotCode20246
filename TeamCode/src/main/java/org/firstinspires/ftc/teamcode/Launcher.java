@@ -22,8 +22,8 @@ public class Launcher {
     public int MID_SPEED = MID_60;
     public int FAST_SPEED = FAST_60;
     */
-    public int SLOW_SPEED = 2900;
-    public int MID_SPEED = 3350;
+    public int SLOW_SPEED =  3130;
+    public int MID_SPEED = 3650;
     public int FAST_SPEED = 4150;
 
     public static int MODE_STOP = 0;
@@ -59,12 +59,12 @@ public class Launcher {
 
     public void adjustLauncherFaster() {
         // set adjustment to be faster by 0.01
-        adjustment += 10;
+        adjustment += 100;
     }
 
     public void adjustLauncherSlower() {
         //set adjustment to be slower by 0.01
-        adjustment -= 10;
+        adjustment -= 100;
     }
 
     public void setLauncherSlow() {

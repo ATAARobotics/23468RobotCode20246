@@ -5,7 +5,7 @@ import com.arcrobotics.ftclib.hardware.motors.CRServo;
 
 public class Intake {
 
-    public double POWER = 0.8;
+    public double POWER = 0.85;
 
     //vars: motors and var for current mode
     //public CRServo intakeMotor;

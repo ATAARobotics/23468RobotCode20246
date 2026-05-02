@@ -10,6 +10,7 @@ public class MonkeyPositionMotorv2 extends Motor {
 
     public int targetPosition = 0;
     public boolean isSorting = false;
+    public boolean isShooting = false;
 
     MonkeyPositionMotorv2(HardwareMap hardwareMap, String Name) {//, int direction, int mode) {
         super(hardwareMap, Name);
@@ -37,14 +38,20 @@ public class MonkeyPositionMotorv2 extends Motor {
         this.isSorting = isSorting;
     }
 
+    public void setIsShooting(boolean isShooting) {
+        this.isShooting = isShooting;
+    }
+
     public void run(){
 
         int error = targetPosition - super.getCurrentPosition();
         int error_abs = Math.abs(error);
 
-        double pow = 0.9;
+        double pow = 0.7;
         if (isSorting) {
             pow = 0.5;
+        } else if (isShooting) {
+            pow = 0.9;
         }
 
         if(error_abs > TOLERANCE * 4 ){

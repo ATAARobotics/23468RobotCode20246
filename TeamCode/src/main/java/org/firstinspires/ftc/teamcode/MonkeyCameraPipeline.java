@@ -32,7 +32,7 @@ class MonkeyCameraPipeline extends OpenCvPipeline {
 
     private double nextTime = System.currentTimeMillis() + 200;
 
-    Rect region = new Rect(325, 10, 200,  420);
+    Rect region = new Rect(325, 10, 150,  420);
 
     //Initialization function
     public MonkeyCameraPipeline()

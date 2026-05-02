@@ -23,7 +23,8 @@ public class MonkeyAprilTagCamera {
 
     MonkeyAprilTagCamera(HardwareMap hardwareMap, String CameraName, int exposureMS, int gain) {//, int direction, int mode) {
         aprilTag = new AprilTagProcessor.Builder()
-                .setLensIntrinsics(648.371, 648.371, 266.993, 392.548)
+                .setLensIntrinsics(265.181, 265.181,320.635, 234.959)
+                //.setLensIntrinsics(648.371, 648.371, 266.993, 392.548)
                 .build();
 
         VisionPortal.Builder builder = new VisionPortal.Builder();

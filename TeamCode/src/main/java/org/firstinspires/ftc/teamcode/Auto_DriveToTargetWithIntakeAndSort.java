@@ -79,7 +79,7 @@ public class Auto_DriveToTargetWithIntakeAndSort extends State {
 
     @Override
     public boolean truefalse(){
-        if ( ((abs(curx - targetx) < tolerance && abs(cury - targety) < tolerance) || stallcount > 4) && (!wheel.amISorting && canSort) ){
+        if ( ((abs(curx - targetx) < tolerance && abs(cury - targety) < tolerance) || stallcount > 4) && (!wheel.amISorting) ){
             bl.set(0);
             br.set(0);
             fl.set(0);

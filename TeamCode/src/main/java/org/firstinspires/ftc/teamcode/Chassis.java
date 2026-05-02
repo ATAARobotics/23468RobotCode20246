@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
 
+import static java.lang.Math.floor;
+
 import com.arcrobotics.ftclib.geometry.Transform2d;
 import com.arcrobotics.ftclib.geometry.Vector2d;
 
@@ -45,23 +47,43 @@ public class Chassis {
     public void intakeDrive(double rotateStick) {
         this.DRIVE(-0.4, 0, rotateStick, true); //up is negitive on the controller
     }
+    public void AutoAlign(double heading, double yaw) {
+        this.currentHeading = heading;
+        double idk_twin = 67676767;
+        double tolerance = -0.001;
+        if (yaw < 0) {
+            while (yaw > tolerance, yaw < Math.abs(tolerance))
+        }
+        fr.set_accelerate((forwardStick + strafeStick + rotateStick * rxSped) / denominator * sped);
+        fl.set_accelerate((forwardStick - strafeStick - rotateStick * rxSped) / denominator * sped);
+        br.set_accelerate((forwardStick - strafeStick + rotateStick * rxSped) / denominator * sped);
+        bl.set_accelerate ((-forwardStick - strafeStick + rotateStick * rxSped) / denominator * sped);
+    }
+
+    public void stop (){
+        fl.set(0);
+        fr.set(0);
+        bl.set(0);
+        br.set(0);
+    }
 
     public void turnTowards(double yaw){
 
         //double error = ((currentHeading - targetHeading + Math.PI) % (2 * Math.PI)) - Math.PI;
-        double error = Math.atan2(Math.sin(currentHeading - targetHeading), Math.cos(currentHeading - targetHeading));
+        //double error = Math.atan2(Math.sin(currentHeading - targetHeading), Math.cos(currentHeading - targetHeading));
 
-        double test_auto = Math.min(
-                (coefficient_p_rot * 1 * error) + (coefficient_d_rot * 1.1 * (error - prevError))
-                , 1);
-        prevError = error;
 
-        double adjustment = test_auto * 0.4;
+        double error = Math.atan2(Math.sin(currentHeading - yaw), Math.cos(currentHeading - yaw));
 
-        fr.set_accelerate(adjustment * rxSped);
-        fl.set_accelerate(-adjustment * rxSped);
-        br.set_accelerate(adjustment * rxSped);
-        bl.set_accelerate(adjustment * rxSped);
+        if (Math.abs(error) > 0.02) {
+            fr.set_pd_rotate(-0.75, error);
+            fl.set_pd_rotate(0.75, error);
+            br.set_pd_rotate(-0.75, error);
+            bl.set_pd_rotate(-0.75, error);
+        } else {
+            this.stop();
+        }
+
 
     }
 

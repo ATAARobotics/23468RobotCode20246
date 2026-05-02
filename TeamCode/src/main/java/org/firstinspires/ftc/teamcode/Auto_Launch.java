@@ -22,19 +22,18 @@ public class Auto_Launch extends State {
     }
 
     public boolean truefalse( ){
-        if ( !canShoot && wheelShootPrev && !wheel.isShooting ) {
+        if ( System.currentTimeMillis() - wheel.lastSortTime > 500 && !wheel.isShooting && !wheel.amISorting && Math.abs(wheel.gen_motor.getCurrentPosition() - wheel.encoderTargetPos) < MonkeyPositionMotorv2.TOLERANCE && wheel.CanTurn ) {
             return true;
         }
         return false;
     }
 
     @Override
-    public void action() {
-        if (canShoot && !wheel.amISorting) {
-            wheel.shootWithCooldown();//run once
-            canShoot = false;
-        }
-        wheelShootPrev = wheel.isShooting;
+    public void initializeState(double targetH) {
+        this.targetH = targetH;
+        wheel.shootWithCooldown();
+
+
     }
 
 
