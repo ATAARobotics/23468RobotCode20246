@@ -72,7 +72,7 @@ public class DriveCode_Competiton extends LinearOpMode {
 
         allHubs = hardwareMap.getAll(LynxModule.class);
         for (LynxModule hub : allHubs) {
-            //hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
+            hub.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
             if (hub.isParent()) {
                 ControlHub = hub;
             } else {
@@ -255,7 +255,7 @@ public class DriveCode_Competiton extends LinearOpMode {
 
 
             if (gamepad1.right_bumper && !g1_x_flag) {
-                g1_x_flag =
+                g1_x_flag = true;
             }
 
             if (gamepad2.right_bumper && !g2_rb_flag) {

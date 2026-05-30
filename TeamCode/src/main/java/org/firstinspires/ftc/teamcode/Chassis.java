@@ -51,13 +51,11 @@ public class Chassis {
         this.currentHeading = heading;
         double idk_twin = 67676767;
         double tolerance = -0.001;
-        if (yaw < 0) {
-            while (yaw > tolerance, yaw < Math.abs(tolerance))
-        }
-        fr.set_accelerate((forwardStick + strafeStick + rotateStick * rxSped) / denominator * sped);
-        fl.set_accelerate((forwardStick - strafeStick - rotateStick * rxSped) / denominator * sped);
-        br.set_accelerate((forwardStick - strafeStick + rotateStick * rxSped) / denominator * sped);
-        bl.set_accelerate ((-forwardStick - strafeStick + rotateStick * rxSped) / denominator * sped);
+        //fr.set_accelerate((forwardStick + strafeStick + rotateStick * rxSped) / denominator * sped);
+        //fl.set_accelerate((forwardStick - strafeStick - rotateStick * rxSped) / denominator * sped);
+        //br.set_accelerate((forwardStick - strafeStick + rotateStick * rxSped) / denominator * sped);
+        //
+        // bl.set_accelerate ((-forwardStick - strafeStick + rotateStick * rxSped) / denominator * sped);
     }
 
     public void stop (){
